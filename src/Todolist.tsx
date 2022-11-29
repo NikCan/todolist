@@ -1,10 +1,11 @@
-import React, {ChangeEvent} from 'react';
+import React from 'react';
 import {FilterValuesType} from './App';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import IconButton from '@mui/material/IconButton/IconButton';
 import {Delete} from "@mui/icons-material";
-import {Button, Checkbox} from "@mui/material";
+import {Button} from "@mui/material";
+import {CheckBox} from "./components/CheckBox";
 
 
 export type TaskType = {
@@ -42,11 +43,14 @@ export function Todolist(props: PropsType) {
     const onAllClickHandler = () => props.changeFilter("all", props.id);
     const onActiveClickHandler = () => props.changeFilter("active", props.id);
     const onCompletedClickHandler = () => props.changeFilter("completed", props.id);
+    const ChangeTaskStatusHandler = (tId: string, checkedValue: boolean) => {
+        props.changeTaskStatus(tId, checkedValue, props.id)
+    }
 
     return <div>
-        <h3> <EditableSpan value={props.title} onChange={changeTodolistTitle} />
+        <h3><EditableSpan value={props.title} onChange={changeTodolistTitle}/>
             <IconButton onClick={removeTodolist}>
-                <Delete />
+                <Delete/>
             </IconButton>
         </h3>
         <AddItemForm addItem={addTask}/>
@@ -54,25 +58,21 @@ export function Todolist(props: PropsType) {
             {
                 props.tasks.map(t => {
                     const onClickHandler = () => props.removeTask(t.id, props.id)
-                    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-                        let newIsDoneValue = e.currentTarget.checked;
-                        props.changeTaskStatus(t.id, newIsDoneValue, props.id);
-                    }
                     const onTitleChangeHandler = (newValue: string) => {
                         props.changeTaskTitle(t.id, newValue, props.id);
                     }
 
 
                     return <div key={t.id} className={t.isDone ? "is-done" : ""}>
-                        <Checkbox
-                            checked={t.isDone}
-                            color="primary"
-                            onChange={onChangeHandler}
-                        />
-
-                        <EditableSpan value={t.title} onChange={onTitleChangeHandler} />
+                        {/*<Checkbox*/}
+                        {/*    checked={t.isDone}*/}
+                        {/*    color="primary"*/}
+                        {/*    onChange={onChangeHandler}*/}
+                        {/*/>*/}
+                        <CheckBox callBack={(checkedValue)=>{ChangeTaskStatusHandler(t.id, checkedValue)}} isDone={t.isDone}/>
+                        <EditableSpan value={t.title} onChange={onTitleChangeHandler}/>
                         <IconButton onClick={onClickHandler}>
-                            <Delete />
+                            <Delete/>
                         </IconButton>
                     </div>
                 })
