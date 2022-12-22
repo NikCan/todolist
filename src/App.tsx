@@ -1,16 +1,13 @@
 import React, {useCallback} from 'react';
 import './App.css';
 import {TaskType, Todolist} from './Todolist';
-import {v1} from 'uuid';
 import {AddItemForm} from './AddItemForm';
 import {
     addTodolistAC,
     changeTodolistFilterAC,
     changeTodolistTitleAC,
     removeTodolistAC,
-
 } from './state/todolists-reducer';
-import {addTaskAC, } from './state/tasks-reducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
@@ -27,33 +24,23 @@ export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
-
-function AppWithRedux() {
-    let todolistId1 = v1();
-    let todolistId2 = v1();
+const App = () => {
+    console.log("App")
 
     const todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
     const dispatch = useDispatch();
 
-
-    const addTask = useCallback((title: string, todolistId: string) => {
-        dispatch(addTaskAC(title, todolistId));
-    }, [dispatch])
-
     const changeFilter = useCallback((value: FilterValuesType, todolistId: string) => {
         dispatch(changeTodolistFilterAC(todolistId, value));
     }, [dispatch])
-
-    const removeTodolist = useCallback ((id: string) => {
+    const removeTodolist = useCallback((id: string) => {
         dispatch(removeTodolistAC(id));
     }, [dispatch])
-
-    const changeTodolistTitle = useCallback ((id: string, title: string) => {
+    const changeTodolistTitle = useCallback((id: string, title: string) => {
         dispatch(changeTodolistTitleAC(id, title));
     }, [dispatch])
-
     const addTodolist = useCallback((title: string) => {
-        dispatch(addTodolistAC(title))
+        dispatch(addTodolistAC(title));
     }, [dispatch])
 
     return (
@@ -79,10 +66,9 @@ function AppWithRedux() {
                             return <Grid item key={tl.id}>
                                 <Paper style={{padding: "10px"}}>
                                     <Todolist
-                                        id={tl.id}
+                                        todolistId={tl.id}
                                         title={tl.title}
                                         changeFilter={changeFilter}
-                                        addTask={addTask}
                                         filter={tl.filter}
                                         removeTodolist={removeTodolist}
                                         changeTodolistTitle={changeTodolistTitle}
@@ -97,4 +83,4 @@ function AppWithRedux() {
     );
 }
 
-export default AppWithRedux;
+export default App;
