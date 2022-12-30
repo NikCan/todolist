@@ -2,7 +2,7 @@ import React, {ChangeEvent, useState} from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 import {action} from "@storybook/addon-actions";
 import {Task} from "./Task";
-import {TaskType} from "../../Todolist";
+import {TaskType} from "../Todolist/Todolist";
 
 export default {
     title: 'Example/Task',

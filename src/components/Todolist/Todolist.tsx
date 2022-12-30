@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react'
-import {FilterValuesType} from './App'
-import {AddItemForm} from './components/AddItemForm/AddItemForm'
-import {EditableSpan} from './components/EditableSpan/EditableSpan'
+import {FilterValuesType} from '../../App'
+import {AddItemForm} from '../AddItemForm/AddItemForm'
+import {EditableSpan} from '../EditableSpan/EditableSpan'
 
-import {Task} from './components/Task/Task'
+import {Task} from '../Task/Task'
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 
@@ -25,7 +25,6 @@ type PropsType = {
     removeTodolist: (id: string) => void
     changeTodolistTitle: (id: string, newTitle: string) => void
     filter: FilterValuesType
-
 }
 
 export const Todolist = React.memo(function (props: PropsType) {
