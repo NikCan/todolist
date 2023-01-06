@@ -26,18 +26,17 @@ export type updateTaskType = {
     startDate: string | null
     deadline: string | null
 }
-type ResponseType<T = {}> = {
+export type ResponseType<T = {}> = {
     resultCode: number
     messages: Array<string>
     fieldsErrors: Array<string>
     data: T
-}
-type getTasksType = {
+} | null
+export type getTasksType = {
     items: TaskType []
     totalCount: number
     error: string | null
-}
-
+} | null
 
 const instance = axios.create({
     withCredentials: true,
