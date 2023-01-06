@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {getTasksType, ResponseType, TaskType, todolistAPI, TodolistType, updateTaskType} from "../api/todolist-api";
+import {getTasksType, ResponseType, TaskType, todolistAPI, TodolistType, updateTaskModelType} from "../api/todolist-api";
 
 export default {
     title: 'API'
@@ -21,7 +21,7 @@ export const GetTodolists = () => {
     </>
 }
 export const CreateTodolist = () => {
-    const [state, setState] = useState<any>(null)
+    const [state, setState] = useState<ResponseType<{ item: TodolistType }>>(null)
     const [title, setTitle] = useState<string>('')
     const createNewTodolist = () => {
         todolistAPI.createTodolist(title)
@@ -39,7 +39,7 @@ export const CreateTodolist = () => {
     </div>
 }
 export const DeleteTodolist = () => {
-    const [state, setState] = useState<any>(null)
+    const [state, setState] = useState<ResponseType>(null)
     const [todolistId, setTodolistId] = useState<string>("")
     const deleteTodolist = () => {
         todolistAPI.deleteTodolist(todolistId)
@@ -58,7 +58,7 @@ export const DeleteTodolist = () => {
     </div>
 }
 export const UpdateTodolistTitle = () => {
-    const [state, setState] = useState<any>(null)
+    const [state, setState] = useState<ResponseType>(null)
     const [todolistId, setTodolistId] = useState<string>("")
     const [title, setTitle] = useState<string>("")
     const updateTodolistTitle = () => {
@@ -106,7 +106,7 @@ export const GetTasks = () => {
     </>
 }
 export const CreateTask = () => {
-    const [state, setState] = useState<any>(null)
+    const [state, setState] = useState<ResponseType<{ item: TaskType }>>(null)
     const [todolistId, setTodolistId] = useState<string>("")
     const [title, setTitle] = useState<string>("")
     const createTask = () => {
@@ -154,14 +154,14 @@ export const DeleteTask = () => {
 }
 export const UpdateTask = () => {
     const [state, setState] = useState<ResponseType>(null)
-    const [oldTask, setOldTask] = useState<any>([])
+    const [oldTask, setOldTask] = useState<TaskType[]>([])
     const [todolistId, setTodolistId] = useState<string>("")
     const [taskId, setTaskId] = useState<string>("")
-    const [task, setTask] = useState<any>({
+    const [task, setTask] = useState<updateTaskModelType>({
         title: "",
         description: "",
-        status: null,
-        priority: null,
+        status: 0,
+        priority: 0,
         startDate: "",
         deadline: ""
     })
@@ -174,14 +174,14 @@ export const UpdateTask = () => {
     const getTask = () => {
         todolistAPI.getTasks(todolistId)
             .then((data) => {
-                setOldTask(data ? data.items.filter(t => t.id === taskId) : null)
+                setOldTask(data.items.filter(t => t.id === taskId))
                 setTask({
-                    title: data ? data.items[0].title : null,
-                    description: data ? data.items[0].description : null,
-                    status: data ? data.items[0].status : null,
-                    priority: data ? data.items[0].priority : null,
-                    startDate: data ? data.items[0].startDate : null,
-                    deadline: data ? data.items[0].deadline : null
+                    title: data.items[0].title,
+                    description: data.items[0].description,
+                    status: data.items[0].status,
+                    priority: data.items[0].priority,
+                    startDate: data.items[0].startDate,
+                    deadline: data.items[0].deadline
                 })
             })
     }
