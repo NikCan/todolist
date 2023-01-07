@@ -1,17 +1,12 @@
 import React, {useCallback} from 'react'
-import {FilterValuesType} from '../../App'
 import {AddItemForm} from '../AddItemForm/AddItemForm'
 import {EditableSpan} from '../EditableSpan/EditableSpan'
 
 import {Task} from '../Task/Task'
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
-
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+import {TaskType} from "../../api/todolists-api";
+import {FilterValuesType} from "../../state/todolists-reducer";
 
 type PropsType = {
     id: string
