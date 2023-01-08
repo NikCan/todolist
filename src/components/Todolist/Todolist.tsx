@@ -40,9 +40,7 @@ export const Todolist = React.memo(function ({
         addTask(title, id)
     }, [addTask, id])
 
-    const removeTodolistHandler = () => {
-        removeTodolist(id)
-    }
+    const removeTodolistHandler = () => removeTodolist(id)
     const changeTodolistTitleHandler = useCallback((title: string) => {
         changeTodolistTitle(id, title)
     }, [id, changeTodolistTitle])
@@ -58,13 +56,10 @@ export const Todolist = React.memo(function ({
     }, [changeFilter, id])
 
     let tasksForTodolist = tasks
+    if (filter === 'active') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.New)
 
-    if (filter === 'active') {
-        tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.New)
-    }
-    if (filter === 'completed') {
-        tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.Completed)
-    }
+    if (filter === 'completed') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.Completed)
+
 
     return <div>
         <h3><EditableSpan value={title} onChange={changeTodolistTitleHandler}/>
