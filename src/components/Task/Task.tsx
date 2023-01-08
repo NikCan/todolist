@@ -15,11 +15,12 @@ type TaskPropsType = {
 export const Task = React.memo((props: TaskPropsType) => {
     const onClickHandler = () => props.removeTask(props.task.id, props.todolistId)
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        let newIsDoneValue = e.currentTarget.checked ? 2 : 0
+        let newIsDoneValue = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New
         props.changeTaskStatus(props.task.id, newIsDoneValue, props.todolistId)
     }
     const onTitleChangeHandler = useCallback((newValue: string) => {
         props.changeTaskTitle(props.task.id, newValue, props.todolistId)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.task.id, props.changeTaskTitle, props.todolistId]);
 
 

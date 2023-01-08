@@ -2,6 +2,7 @@ import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 import {action} from "@storybook/addon-actions";
 import {Todolist} from "./Todolist";
+import {TaskPriorities, TaskStatuses} from "../../api/todolists-api";
 
 export default {
     title: 'Example/Todolist',
@@ -9,7 +10,32 @@ export default {
     args: {
         id: "id",
         title: "todolist",
-        tasks: [{id: "tId", title: "Story", isDone: true}, {id: "tId1", title: "Story2", isDone: false}],
+        tasks: [
+            {
+                id: "tId",
+                title: "Story",
+                status: TaskStatuses.Completed,
+                order: 2,
+                addedDate: '',
+                description: 'kjhhgf',
+                priority: TaskPriorities.Low,
+                deadline: '',
+                startDate: '',
+                todoListId: 'todolistId'
+            },
+            {
+                id: "tId1",
+                title: "Story2",
+                status: TaskStatuses.New,
+                order: 2,
+                addedDate: '',
+                description: 'kjhhgf',
+                priority: TaskPriorities.Low,
+                deadline: '',
+                startDate: '',
+                todoListId: 'todolistId'
+            }
+        ],
         changeFilter: action("changeFilter"),
         addTask: action("addTask"),
         changeTaskStatus: action("changeTaskStatus"),
