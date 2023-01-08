@@ -22,19 +22,20 @@ type PropsType = {
     filter: FilterValuesType
 }
 
-export const Todolist = React.memo(function ({
-                                                 id,
-                                                 title,
-                                                 tasks,
-                                                 changeFilter,
-                                                 addTask,
-                                                 changeTaskStatus,
-                                                 changeTaskTitle,
-                                                 removeTask,
-                                                 removeTodolist,
-                                                 changeTodolistTitle,
-                                                 filter
-                                             }: PropsType) {
+export const Todolist = React.memo(({
+                                        id,
+                                        title,
+                                        tasks,
+                                        changeFilter,
+                                        addTask,
+                                        changeTaskStatus,
+                                        changeTaskTitle,
+                                        removeTask,
+                                        removeTodolist,
+                                        changeTodolistTitle,
+                                        filter,
+                                        ...props
+                                    }: PropsType) => {
 
     const addTaskHandler = useCallback((title: string) => {
         addTask(title, id)

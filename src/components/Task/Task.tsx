@@ -12,26 +12,27 @@ type TaskPropsType = {
     task: TaskType
     todolistId: string
 }
-export const Task = React.memo((props: TaskPropsType) => {
-    const onClickHandler = () => props.removeTask(props.task.id, props.todolistId)
+export const Task = React.memo(({
+                                    changeTaskStatus, changeTaskTitle, removeTask, task, todolistId, ...props
+                                }: TaskPropsType) => {
+    const onClickHandler = () => removeTask(task.id, todolistId)
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         let newIsDoneValue = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New
-        props.changeTaskStatus(props.task.id, newIsDoneValue, props.todolistId)
+        changeTaskStatus(task.id, newIsDoneValue, todolistId)
     }
     const onTitleChangeHandler = useCallback((newValue: string) => {
-        props.changeTaskTitle(props.task.id, newValue, props.todolistId)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.task.id, props.changeTaskTitle, props.todolistId]);
+        changeTaskTitle(task.id, newValue, todolistId)
+    }, [task.id, changeTaskTitle, todolistId]);
 
 
-    return <div key={props.task.id} className={props.task.status===TaskStatuses.Completed ? 'is-done' : ''}>
+    return <div key={task.id} className={task.status === TaskStatuses.Completed ? 'is-done' : ''}>
         <Checkbox
-            checked={props.task.status===TaskStatuses.Completed}
+            checked={task.status === TaskStatuses.Completed}
             color="primary"
             onChange={onChangeHandler}
         />
 
-        <EditableSpan value={props.task.title} onChange={onTitleChangeHandler}/>
+        <EditableSpan value={task.title} onChange={onTitleChangeHandler}/>
         <IconButton onClick={onClickHandler}>
             <Delete/>
         </IconButton>
