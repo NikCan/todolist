@@ -40,7 +40,7 @@ export type ResponseType<T = {}> = {
     messages: Array<string>
     fieldsErrors: Array<string>
     data: T
-} | null
+}
 export type getTasksType = {
     items: TaskType []
     totalCount: number
@@ -72,7 +72,7 @@ export const todolistAPI = {
         return instance.put<ResponseType>(`todo-lists/${todolistId}`, {title: title})
             .then((res) => res.data)
     },
-    getTasks(todolistId: string) {
+    fetchTasks(todolistId: string) {
         return instance.get<getTasksType>(`todo-lists/${todolistId}/tasks`)
             .then((res) => res.data)
     },

@@ -1,11 +1,17 @@
-import {v1} from 'uuid';
-import {AddTodolistActionType, RemoveTodolistActionType} from './todolists-reducer';
-import {TaskPriorities, TaskStatuses, TaskType} from "../api/todolists-api";
+import {
+    AddTodolistActionType,
+    RemoveTodolistActionType,
+    SetTodolistsActionType
+} from './todolists-reducer';
+import {TaskStatuses, TaskType, todolistAPI, updateTaskModelType} from "../api/todolists-api";
+import {Dispatch} from "redux";
+import {AppRootStateType} from "./store";
 
 export type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
 export type AddTaskActionType = ReturnType<typeof addTaskAC>
 export type ChangeTaskStatusActionType = ReturnType<typeof changeTaskStatusAC>
 export type ChangeTaskTitleActionType = ReturnType<typeof changeTaskTitleAC>
+export type SetTasksActionType = ReturnType<typeof setTasksAC>
 
 type ActionsType = RemoveTaskActionType
     | AddTaskActionType
@@ -13,6 +19,8 @@ type ActionsType = RemoveTaskActionType
     | ChangeTaskTitleActionType
     | AddTodolistActionType
     | RemoveTodolistActionType
+    | SetTodolistsActionType
+    | SetTasksActionType
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
@@ -22,26 +30,15 @@ const initialState: TasksStateType = {
 
 export const tasksReducer = (state: TasksStateType = initialState, action: ActionsType): TasksStateType => {
     switch (action.type) {
-        case 'REMOVE-TASK':
+        case 'REMOVE-TASK': {
             return {...state, [action.todolistId]: state[action.todolistId].filter(t => t.id !== action.taskId)}
+        }
 
-        case 'ADD-TASK':
-            return {
-                ...state, [action.todolistId]: [{
-                    id: v1(),
-                    title: action.title,
-                    description: "",
-                    status: TaskStatuses.New,
-                    todoListId: action.todolistId,
-                    startDate: "",
-                    deadline: "",
-                    addedDate: "",
-                    order: 0,
-                    priority: TaskPriorities.Low
-                }, ...state[action.todolistId]]
-            };
+        case 'ADD-TASK': {
+            return {...state, [action.todolistId]: [action.task, ...state[action.todolistId]]}
+        }
 
-        case 'CHANGE-TASK-STATUS':
+        case 'CHANGE-TASK-STATUS': {
             return {
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(t => t.id === action.taskId ? {
@@ -49,8 +46,9 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
                     status: action.status
                 } : t)
             }
+        }
 
-        case 'CHANGE-TASK-TITLE':
+        case 'CHANGE-TASK-TITLE': {
             return {
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(t => t.id === action.taskId ? {
@@ -58,16 +56,32 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
                     title: action.title
                 } : t)
             }
-        case 'ADD-TODOLIST':
+        }
+
+        case 'ADD-TODOLIST': {
             return {
                 ...state,
                 [action.todolistId]: []
             }
+        }
 
-        case 'REMOVE-TODOLIST':
+        case 'REMOVE-TODOLIST': {
             const copyState = {...state};
             delete copyState[action.id];
             return copyState;
+        }
+
+        case "SET-TODOLISTS": {
+            const copyState = {...state}
+            action.todolists.forEach(tl => {
+                copyState[tl.id] = []
+            })
+            return copyState
+        }
+
+        case "SET-TASKS": {
+            return {...state, [action.todolistId]: action.tasks}
+        }
 
         default:
             return state;
@@ -77,8 +91,8 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
 export const removeTaskAC = (taskId: string, todolistId: string) => {
     return {type: 'REMOVE-TASK', taskId: taskId, todolistId: todolistId} as const
 }
-export const addTaskAC = (title: string, todolistId: string) => {
-    return {type: 'ADD-TASK', title, todolistId} as const
+export const addTaskAC = (todolistId: string, task: TaskType) => {
+    return {type: 'ADD-TASK', todolistId, task} as const
 }
 export const changeTaskStatusAC = (taskId: string, status: TaskStatuses, todolistId: string) => {
     return {type: 'CHANGE-TASK-STATUS', status, todolistId, taskId} as const
@@ -86,4 +100,45 @@ export const changeTaskStatusAC = (taskId: string, status: TaskStatuses, todolis
 export const changeTaskTitleAC = (taskId: string, title: string, todolistId: string) => {
     return {type: 'CHANGE-TASK-TITLE', title, todolistId, taskId} as const
 }
+export const setTasksAC = (todolistId: string, tasks: TaskType[]) => {
+    return {type: 'SET-TASKS', todolistId, tasks} as const
+}
 
+export const FetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
+    todolistAPI.fetchTasks(todolistId)
+        .then((data) => {
+            dispatch(setTasksAC(todolistId, data.items))
+        })
+}
+
+export const RemoveTaskTC = (taskId: string, todolistId: string) => (dispatch: Dispatch) => {
+    todolistAPI.deleteTask(todolistId, taskId)
+        .then((data) => {
+            dispatch(removeTaskAC(taskId, todolistId))
+        })
+}
+
+export const CreateTaskTC = (title: string, todolistId: string) => (dispatch: Dispatch) => {
+    todolistAPI.createTask(todolistId, title)
+        .then((data) => {
+            dispatch(addTaskAC(todolistId, data.data.item))
+        })
+}
+
+export const UpdateTaskTC = (taskId: string, status: TaskStatuses, todolistId: string) => (dispatch: Dispatch, getState: () => AppRootStateType) => {
+    const task = getState().tasks[todolistId].find(t => t.id === taskId)
+    if (task) {
+        const model: updateTaskModelType = {
+            title: task.title,
+            status,
+            startDate: task.startDate,
+            deadline: task.deadline,
+            priority: task.priority,
+            description: task.description
+        }
+        todolistAPI.updateTask(todolistId, taskId, model)
+            .then((data) => {
+                dispatch(changeTaskStatusAC(taskId, status, todolistId))
+            })
+    }
+}

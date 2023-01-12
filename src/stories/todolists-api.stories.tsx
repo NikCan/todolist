@@ -93,7 +93,7 @@ export const GetTasks = () => {
     const [state, setState] = useState<getTasksType>({error: null, totalCount: 0, items: []})
     const [todolistId, setTodolistId] = useState<string>("")
     const getTasks = () => {
-        todolistAPI.getTasks(todolistId)
+        todolistAPI.fetchTasks(todolistId)
             .then((data) => {
                 setState(data)
                 setTodolistId('')
@@ -179,7 +179,7 @@ export const UpdateTask = () => {
             })
     }
     const getTask = () => {
-        todolistAPI.getTasks(todolistId)
+        todolistAPI.fetchTasks(todolistId)
             .then((data) => {
                 setOldTask(data.items.filter(t => t.id === taskId))
                 setTask({
