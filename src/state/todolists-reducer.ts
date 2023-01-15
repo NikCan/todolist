@@ -85,3 +85,8 @@ export const ChangeTodolistTitleTC = (id: string, title: string) => (dispatch: D
             dispatch(changeTodolistTitleAC(id,title))
         })
 }
+
+const _ChangeTodolistTitleTC = (id: string, title: string) => async (dispatch:Dispatch) => {
+    const data = await todolistAPI.updateTodolist(id, title)
+            dispatch(changeTodolistTitleAC(id,title))
+}
