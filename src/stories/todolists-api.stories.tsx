@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {
     getTasksType,
-    ResponseType,
     TaskType,
     todolistAPI,
     TodolistType,
@@ -11,6 +10,12 @@ import {
 export default {
     title: 'API'
 }
+type ResponseTypeForStories<T = {}> = {
+    resultCode: number
+    messages: Array<string>
+    fieldsErrors: Array<string>
+    data: T
+} | null
 
 export const GetTodolists = () => {
     const [state, setState] = useState<TodolistType[]>([])
@@ -28,7 +33,7 @@ export const GetTodolists = () => {
     </>
 }
 export const CreateTodolist = () => {
-    const [state, setState] = useState<ResponseType<{ item: TodolistType }>>(null)
+    const [state, setState] = useState<ResponseTypeForStories<{ item: TodolistType }>>(null)
     const [title, setTitle] = useState<string>('')
     const createNewTodolist = () => {
         todolistAPI.createTodolist(title)
@@ -46,7 +51,7 @@ export const CreateTodolist = () => {
     </div>
 }
 export const DeleteTodolist = () => {
-    const [state, setState] = useState<ResponseType>(null)
+    const [state, setState] = useState<ResponseTypeForStories>(null)
     const [todolistId, setTodolistId] = useState<string>("")
     const deleteTodolist = () => {
         todolistAPI.deleteTodolist(todolistId)
@@ -65,7 +70,7 @@ export const DeleteTodolist = () => {
     </div>
 }
 export const UpdateTodolistTitle = () => {
-    const [state, setState] = useState<ResponseType>(null)
+    const [state, setState] = useState<ResponseTypeForStories>(null)
     const [todolistId, setTodolistId] = useState<string>("")
     const [title, setTitle] = useState<string>("")
     const updateTodolistTitle = () => {
@@ -113,7 +118,7 @@ export const GetTasks = () => {
     </>
 }
 export const CreateTask = () => {
-    const [state, setState] = useState<ResponseType<{ item: TaskType }>>(null)
+    const [state, setState] = useState<ResponseTypeForStories<{ item: TaskType }>>(null)
     const [todolistId, setTodolistId] = useState<string>("")
     const [title, setTitle] = useState<string>("")
     const createTask = () => {
@@ -136,7 +141,7 @@ export const CreateTask = () => {
     </div>
 }
 export const DeleteTask = () => {
-    const [state, setState] = useState<ResponseType>(null)
+    const [state, setState] = useState<ResponseTypeForStories>(null)
     const [todolistId, setTodolistId] = useState<string>("")
     const [taskId, setTaskId] = useState<string>("")
     const deleteTask = () => {
@@ -160,7 +165,7 @@ export const DeleteTask = () => {
     </div>
 }
 export const UpdateTask = () => {
-    const [state, setState] = useState<ResponseType>(null)
+    const [state, setState] = useState<ResponseTypeForStories>(null)
     const [oldTask, setOldTask] = useState<TaskType[]>([])
     const [todolistId, setTodolistId] = useState<string>("")
     const [taskId, setTaskId] = useState<string>("")
