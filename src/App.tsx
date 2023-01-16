@@ -12,17 +12,17 @@ import {
 } from './state/todolists-reducer';
 import {
     CreateTaskTC, RemoveTaskTC,
-    TasksStateType, UpdateTaskTC
+    UpdateTaskTC
 } from './state/tasks-reducer';
 import {useSelector} from 'react-redux';
-import {AppDispatch, AppRootStateType} from './state/store';
+import {useAppDispatch, AppRootStateType, useAppSelector} from './state/store';
 import {TaskStatuses} from "./api/todolists-api";
 
 function App() {
 
-    const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
-    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
-    const dispatch = AppDispatch();
+    const todolists = useAppSelector(state => state.todolists)
+    const tasks = useAppSelector(state => state.tasks)
+    const dispatch = useAppDispatch();
 
     const removeTask = useCallback(function (id: string, todolistId: string) {
         dispatch(RemoveTaskTC(id, todolistId));
