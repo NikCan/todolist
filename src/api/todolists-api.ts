@@ -1,52 +1,5 @@
 import axios from "axios";
 
-export type TodolistType = {
-    id: string
-    title: string
-    addedDate: string
-    order: number
-}
-
-export enum TaskStatuses {
-    New,
-    InProgress,
-    Completed,
-    Draft,
-}
-export enum TaskPriorities {
-    Low,
-    Middle,
-    High,
-    Urgently,
-    Later,
-}
-
-export type TaskType = updateTaskModelType & {
-    id: string
-    todoListId: string
-    order: number
-    addedDate: string
-}
-export type updateTaskModelType = {
-    title: string
-    description: string
-    status: TaskStatuses
-    priority: TaskPriorities
-    startDate: string
-    deadline: string
-}
-export type ResponseType<T = {}> = {
-    resultCode: number
-    messages: Array<string>
-    fieldsErrors: Array<string>
-    data: T
-}
-export type getTasksType = {
-    items: TaskType []
-    totalCount: number
-    error: string | null
-}
-
 const instance = axios.create({
     withCredentials: true,
     headers: {
@@ -55,6 +8,7 @@ const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/'
 })
 
+// api
 export const todolistAPI = {
     getTodolists() {
         return instance.get<TodolistType[]>(`todo-lists`)
@@ -88,4 +42,51 @@ export const todolistAPI = {
         return instance.put<ResponseType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks/${taskId}`, model)
             .then((res) => res.data)
     },
+}
+
+// types
+export type TodolistType = {
+    id: string
+    title: string
+    addedDate: string
+    order: number
+}
+
+export enum TaskStatuses {
+    New,
+    InProgress,
+    Completed,
+    Draft,
+}
+export enum TaskPriorities {
+    Low,
+    Middle,
+    High,
+    Urgently,
+    Later,
+}
+export type TaskType = updateTaskModelType & {
+    id: string
+    todoListId: string
+    order: number
+    addedDate: string
+}
+export type updateTaskModelType = {
+    title: string
+    description: string
+    status: TaskStatuses
+    priority: TaskPriorities
+    startDate: string
+    deadline: string
+}
+export type ResponseType<T = {}> = {
+    resultCode: number
+    messages: Array<string>
+    fieldsErrors: Array<string>
+    data: T
+}
+export type getTasksType = {
+    items: TaskType []
+    totalCount: number
+    error: string | null
 }

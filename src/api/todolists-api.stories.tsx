@@ -5,7 +5,7 @@ import {
     todolistAPI,
     TodolistType,
     updateTaskModelType
-} from "../api/todolists-api";
+} from "./todolists-api";
 
 export default {
     title: 'API'

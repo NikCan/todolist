@@ -2,10 +2,10 @@ import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 import {action} from "@storybook/addon-actions";
 import {Todolist} from "./Todolist";
-import {TaskPriorities, TaskStatuses} from "../../api/todolists-api";
+import {TaskPriorities, TaskStatuses} from "../../../api/todolists-api";
 
 export default {
-    title: 'Example/Todolist',
+    title: 'Example/TodolistsList',
     component: Todolist,
     args: {
         id: "id",

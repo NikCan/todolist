@@ -2,8 +2,8 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import App from './App';
-import {store} from './state/store';
+import App from './app/App';
+import {store} from './app/store';
 import {Provider} from 'react-redux';
 
 const container = document.getElementById('root') as HTMLElement
