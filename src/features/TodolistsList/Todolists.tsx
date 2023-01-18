@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../../app/store";
-import {CreateTaskTC, RemoveTaskTC, UpdateTaskTC} from "./tasks-reducer";
+import {CreateTaskTC, RemoveTaskTC, UpdateTaskTC} from "./Todolist/Task/tasks-reducer";
 import {TaskStatuses} from "../../api/todolists-api";
 import {
     AddTodolistTC,
