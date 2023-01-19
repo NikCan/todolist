@@ -7,13 +7,16 @@ import {
     changeTodolistFilterAC,
     ChangeTodolistTitleTC,
     FilterValuesType,
-    RemoveTodolistTC, SetTodolistsTC
+    RemoveTodolistTC, SetTodolistsTC, TodolistDomainType
 } from "./todolists-reducer";
 import {Grid, Paper} from "@mui/material";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
 import {Todolist} from "./Todolist/Todolist";
 
-export const TodolistsList:React.FC = () => {
+type PropsType = {
+    demo?: boolean
+}
+export const TodolistsList: React.FC<PropsType> = ({demo = false, ...props}) => {
     const todolists = useAppSelector(state => state.todolists)
     const tasks = useAppSelector(state => state.tasks)
     const dispatch = useAppDispatch();
@@ -52,7 +55,7 @@ export const TodolistsList:React.FC = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(SetTodolistsTC())
+        !demo && dispatch(SetTodolistsTC())
     }, [])
 
     return <>
@@ -61,7 +64,7 @@ export const TodolistsList:React.FC = () => {
         </Grid>
         <Grid container spacing={3}>
             {
-                todolists.map(tl => {
+                todolists.map((tl: TodolistDomainType) => {
                     return <Grid item key={tl.id}>
                         <Paper style={{padding: "10px"}}>
                             <Todolist
@@ -76,6 +79,8 @@ export const TodolistsList:React.FC = () => {
                                 removeTodolist={removeTodolist}
                                 changeTaskTitle={changeTaskTitle}
                                 changeTodolistTitle={changeTodolistTitle}
+                                entityStatus={tl.entityStatus}
+                                demo={demo}
                             />
                         </Paper>
                     </Grid>

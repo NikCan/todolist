@@ -7,7 +7,11 @@ import {TodolistsList} from "../features/TodolistsList/Todolists";
 import {useAppSelector} from "./store";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 
-function App() {
+type PropsType = {
+    demo?: boolean
+}
+
+function App({demo = false, ...props}: PropsType) {
     const status = useAppSelector(state => state.app.status)
     return (
         <div className="App">
@@ -21,11 +25,11 @@ function App() {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
-                {status==="loading" && <LinearProgress/>}
+                {status === "loading" && <LinearProgress/>}
             </AppBar>
             <Container fixed>
                 <ErrorSnackbar/>
-                <TodolistsList/>
+                <TodolistsList demo={demo}/>
             </Container>
         </div>
     );

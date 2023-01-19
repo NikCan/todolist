@@ -5,7 +5,7 @@ import {
 } from '../../todolists-reducer';
 import {TaskPriorities, TaskStatuses, TaskType, todolistAPI, updateTaskModelType} from "../../../../api/todolists-api";
 import {AppRootStateType, AppThunkType} from "../../../../app/store";
-import {SetAppStatusAC, SetAppStatusActionType} from "../../../../app/app-reducer";
+import {SetAppStatusAC, SetAppStatusActionType, SetErrorMessageAC} from "../../../../app/app-reducer";
 
 const initialState: TasksStateType = {
     count: []
@@ -72,8 +72,13 @@ export const CreateTaskTC = (title: string, todolistId: string): AppThunkType =>
     dispatch(SetAppStatusAC("loading"))
     todolistAPI.createTask(todolistId, title)
         .then((data) => {
-            dispatch(addTaskAC(todolistId, data.data.item))
-            dispatch(SetAppStatusAC("succeeded"))
+            if (data.resultCode === 0) {
+                dispatch(addTaskAC(todolistId, data.data.item))
+                dispatch(SetAppStatusAC("succeeded"))
+            } else {
+                dispatch(SetErrorMessageAC(data.messages[0] || 'Some error occurred'))
+                dispatch(SetAppStatusAC("failed"))
+            }
         })
 }
 export const UpdateTaskTC = (taskId: string, domainModel: UpdateDomainModelType, todolistId: string): AppThunkType =>
