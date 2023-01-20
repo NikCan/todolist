@@ -32,7 +32,8 @@ const initialGlobalState: AppRootStateType = {
                 priority: TaskPriorities.High,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId1'
+                todoListId: 'todolistId1',
+                entityStatus: 'idle'
             },
             {
                 id: v1(), title: 'JS',
@@ -43,7 +44,8 @@ const initialGlobalState: AppRootStateType = {
                 priority: TaskPriorities.High,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId1'
+                todoListId: 'todolistId1',
+                entityStatus: 'idle'
             }
         ],
         'todolistId2': [
@@ -57,7 +59,8 @@ const initialGlobalState: AppRootStateType = {
                 priority: TaskPriorities.Low,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId2'
+                todoListId: 'todolistId2',
+                entityStatus: 'idle'
             },
             {
                 id: v1(), title: 'React Book',
@@ -68,7 +71,8 @@ const initialGlobalState: AppRootStateType = {
                 priority: TaskPriorities.Middle,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId2'
+                todoListId: 'todolistId2',
+                entityStatus: 'idle'
             }
         ]
     },

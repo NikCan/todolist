@@ -1,4 +1,11 @@
-import {addTaskAC, removeTaskAC, tasksReducer, TasksStateType, updateTaskAC} from './tasks-reducer';
+import {
+    addTaskAC,
+    changeTaskEntityStatusAC,
+    removeTaskAC,
+    tasksReducer,
+    TasksStateType,
+    updateTaskAC
+} from './tasks-reducer';
 import {addTodolistAC, removeTodolistAC} from '../../todolists-reducer';
 import {TaskPriorities, TaskStatuses} from "../../../../api/todolists-api";
 
@@ -16,7 +23,8 @@ beforeEach(() => {
                 priority: TaskPriorities.Low,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId2'
+                todoListId: 'todolistId2',
+                entityStatus: 'idle'
             },
             {
                 id: "2",
@@ -28,7 +36,8 @@ beforeEach(() => {
                 priority: TaskPriorities.Low,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId2'
+                todoListId: 'todolistId2',
+                entityStatus: 'idle'
             },
             {
                 id: "3",
@@ -40,7 +49,8 @@ beforeEach(() => {
                 priority: TaskPriorities.Low,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId2'
+                todoListId: 'todolistId2',
+                entityStatus: 'idle'
             }
         ],
         "todolistId2": [
@@ -54,7 +64,8 @@ beforeEach(() => {
                 priority: TaskPriorities.Low,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId2'
+                todoListId: 'todolistId2',
+                entityStatus: 'idle'
             },
             {
                 id: "2",
@@ -66,7 +77,8 @@ beforeEach(() => {
                 priority: TaskPriorities.Low,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId2'
+                todoListId: 'todolistId2',
+                entityStatus: 'idle'
             },
             {
                 id: "3",
@@ -78,7 +90,8 @@ beforeEach(() => {
                 priority: TaskPriorities.Low,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId2'
+                todoListId: 'todolistId2',
+                entityStatus: 'idle'
             }
         ]
     };
@@ -104,7 +117,8 @@ test('correct task should be added to correct array', () => {
         startDate: "",
         id: "taskId",
         todoListId: "todolistId2",
-        addedDate: ""
+        addedDate: "",
+        entityStatus: 'idle'
     });
 
     const endState = tasksReducer(startState, action)
@@ -165,7 +179,8 @@ test('new array should be added when new todolist is added', () => {
 
     expect(keys.length).toBe(3);
     expect(endState[newKey]).toEqual([]);
-});
+})
+
 test('propertry with todolistId should be deleted', () => {
     const action = removeTodolistAC("todolistId2");
 
@@ -175,4 +190,13 @@ test('propertry with todolistId should be deleted', () => {
 
     expect(keys.length).toBe(1);
     expect(endState["todolistId2"]).not.toBeDefined();
-});
+})
+
+test('entityStatus of specified task should be changed', () => {
+    const action = changeTaskEntityStatusAC("2", "todolistId2", 'loading');
+
+    const endState = tasksReducer(startState, action)
+
+    expect(endState["todolistId1"][1].entityStatus).toBe('idle')
+    expect(endState["todolistId2"][1].entityStatus).toBe('loading')
+})
