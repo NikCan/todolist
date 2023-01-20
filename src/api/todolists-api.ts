@@ -1,4 +1,5 @@
 import axios from "axios";
+import {RequestStatusType} from "../app/app-reducer";
 
 const instance = axios.create({
     withCredentials: true,
@@ -70,6 +71,7 @@ export type TaskType = updateTaskModelType & {
     todoListId: string
     order: number
     addedDate: string
+    entityStatus: RequestStatusType
 }
 export type updateTaskModelType = {
     title: string

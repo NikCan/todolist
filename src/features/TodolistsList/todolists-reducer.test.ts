@@ -65,6 +65,6 @@ test('correct entity status of todolist should be changed', () => {
 
     const endState = todolistsReducer(startState, action);
 
-    expect(endState[0].entityStatus).toBe("idle");
+    expect(endState[0].entityStatus).toBe('idle');
     expect(endState[1].entityStatus).toBe('loading');
 });

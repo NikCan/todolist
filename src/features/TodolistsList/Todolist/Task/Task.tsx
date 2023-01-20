@@ -10,10 +10,17 @@ type TaskPropsType = {
     changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
     removeTask: (taskId: string, todolistId: string) => void
     task: TaskType
-    todolistId: string
+    todolistId: string,
+    disabled?: boolean
 }
 export const Task = React.memo(({
-                                    changeTaskStatus, changeTaskTitle, removeTask, task, todolistId, ...props
+                                    changeTaskStatus,
+                                    changeTaskTitle,
+                                    removeTask,
+                                    task,
+                                    todolistId,
+                                    disabled = false,
+                                    ...props
                                 }: TaskPropsType) => {
     const onClickHandler = () => removeTask(task.id, todolistId)
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,10 +37,11 @@ export const Task = React.memo(({
             checked={task.status === TaskStatuses.Completed}
             color="primary"
             onChange={onChangeHandler}
+            disabled={disabled}
         />
 
-        <EditableSpan value={task.title} onChange={onTitleChangeHandler}/>
-        <IconButton onClick={onClickHandler}>
+        <EditableSpan value={task.title} onChange={onTitleChangeHandler} disabled={disabled}/>
+        <IconButton onClick={onClickHandler} disabled={disabled}>
             <Delete/>
         </IconButton>
     </div>

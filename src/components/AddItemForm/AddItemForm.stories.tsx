@@ -13,7 +13,12 @@ export default {
 
 const Template: ComponentStory<typeof AddItemForm> = (args) => <AddItemForm {...args} />;
 
-export const AddItemFormExample = Template.bind({});
-AddItemFormExample.args = {
+export const AddItemFormBaseExample = Template.bind({});
+AddItemFormBaseExample.args = {
   addItem: action("add item"),
+};
+
+export const AddItemFormDisabledExample = Template.bind({});
+AddItemFormDisabledExample.args = {
+  disabled: true
 };

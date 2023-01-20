@@ -14,5 +14,10 @@ export default {
 
 const Template: ComponentStory<typeof EditableSpan> = (args) => <EditableSpan {...args} />;
 
-export const EditableSpanExample = Template.bind({});
-EditableSpanExample.args = {};
+export const EditableSpanBaseExample = Template.bind({});
+EditableSpanBaseExample.args = {};
+
+export const EditableSpanDisabledExample = Template.bind({});
+EditableSpanDisabledExample.args = {
+    disabled: true
+};
