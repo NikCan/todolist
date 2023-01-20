@@ -21,7 +21,8 @@ export default {
                 priority: TaskPriorities.Low,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId'
+                todoListId: 'todolistId',
+                entityStatus: 'idle'
             },
             {
                 id: "tId1",
@@ -33,7 +34,8 @@ export default {
                 priority: TaskPriorities.Low,
                 deadline: '',
                 startDate: '',
-                todoListId: 'todolistId'
+                todoListId: 'todolistId',
+                entityStatus: 'idle'
             }
         ],
         changeFilter: action("changeFilter"),

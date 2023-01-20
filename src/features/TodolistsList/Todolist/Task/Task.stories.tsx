@@ -21,7 +21,8 @@ export default {
             priority: TaskPriorities.Low,
             deadline: '',
             startDate: '',
-            todoListId: 'todolistId'
+            todoListId: 'todolistId',
+            entityStatus: 'idle'
         },
         todolistId: 'todolistId'
     }
@@ -44,12 +45,13 @@ TaskIsNotDoneExample.args = {
         priority: TaskPriorities.Low,
         deadline: '',
         startDate: '',
-        todoListId: 'todolistId'
+        todoListId: 'todolistId',
+        entityStatus: 'idle'
     },
 };
 
 const Template1: ComponentStory<typeof Task> = () => {
-    const [task, setTask] = useState({
+    const [task, setTask] = useState<TaskType>({
         id: "id",
         title: "Story",
         status: TaskStatuses.New,
@@ -59,11 +61,12 @@ const Template1: ComponentStory<typeof Task> = () => {
         priority: TaskPriorities.Low,
         deadline: '',
         startDate: '',
-        todoListId: 'todolistId'
+        todoListId: 'todolistId',
+        entityStatus: 'idle'
     })
     const changeTaskStatus = () => setTask({
         ...task,
-        status: task.status===TaskStatuses.New ? TaskStatuses.Completed : TaskStatuses.New
+        status: task.status === TaskStatuses.New ? TaskStatuses.Completed : TaskStatuses.New
     })
     const changeTaskTitle = (taskId: string, newValue: string) => setTask({
         ...task, title: newValue
