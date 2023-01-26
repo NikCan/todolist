@@ -12,6 +12,7 @@ import {
 import {Grid, Paper} from "@mui/material";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
 import {Todolist} from "./Todolist/Todolist";
+import {Navigate} from "react-router-dom";
 
 type PropsType = {
     demo?: boolean
@@ -19,7 +20,8 @@ type PropsType = {
 export const TodolistsList: React.FC<PropsType> = ({demo = false, ...props}) => {
     const todolists = useAppSelector(state => state.todolists)
     const tasks = useAppSelector(state => state.tasks)
-    const dispatch = useAppDispatch();
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
+    const dispatch = useAppDispatch()
 
     const removeTask = useCallback(function (id: string, todolistId: string) {
         dispatch(RemoveTaskTC(id, todolistId));
@@ -55,10 +57,10 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false, ...props}) => 
     }, [dispatch]);
 
     useEffect(() => {
-        !demo && dispatch(SetTodolistsTC())
+        !demo && isLoggedIn && dispatch(SetTodolistsTC())
     }, [])
 
-    return <>
+    return !isLoggedIn ? <Navigate to={'/login'}/> : <>
         <Grid container style={{padding: "20px"}}>
             <AddItemForm addItem={addTodolist}/>
         </Grid>
