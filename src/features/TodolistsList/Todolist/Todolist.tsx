@@ -1,14 +1,11 @@
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback} from 'react'
 import {AddItemForm} from '../../../components/AddItemForm/AddItemForm'
 import {EditableSpan} from '../../../components/EditableSpan/EditableSpan'
-
 import {Task} from './Task/Task'
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {TaskStatuses, TaskType} from "../../../api/todolists-api";
 import {FilterValuesType, TodolistDomainType} from "../todolists-reducer";
-import {useAppDispatch} from "../../../app/store";
-import {FetchTasksTC} from "./Task/tasks-reducer";
 
 type PropsType = {
     todolist: TodolistDomainType
@@ -36,10 +33,6 @@ export const Todolist = React.memo(({
                                         demo = false,
                                         ...props
                                     }: PropsType) => {
-    const dispatch = useAppDispatch()
-    useEffect(() => {
-        !demo && dispatch(FetchTasksTC(todolist.id))
-    }, [])
     const addTaskHandler = useCallback((title: string) => {
         addTask(title, todolist.id)
     }, [addTask, todolist.id])
@@ -82,7 +75,7 @@ export const Todolist = React.memo(({
                     removeTask={removeTask}
                     todolistId={todolist.id}
                     key={t.id}
-                    disabled={t.entityStatus==='loading'}
+                    disabled={t.entityStatus === 'loading'}
                 />)
             }
         </div>

@@ -7,7 +7,7 @@ import {
     changeTodolistFilterAC,
     ChangeTodolistTitleTC,
     FilterValuesType,
-    RemoveTodolistTC, SetTodolistsTC, TodolistDomainType
+    RemoveTodolistTC, FetchTodolistsTC, TodolistDomainType
 } from "./todolists-reducer";
 import {Grid, Paper} from "@mui/material";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
@@ -57,7 +57,7 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false, ...props}) => 
     }, [dispatch]);
 
     useEffect(() => {
-        !demo && isLoggedIn && dispatch(SetTodolistsTC())
+        !demo && isLoggedIn && dispatch(FetchTodolistsTC())
     }, [])
 
     return !isLoggedIn ? <Navigate to={'/login'}/> : <>
