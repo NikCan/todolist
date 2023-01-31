@@ -10,14 +10,14 @@ beforeEach(() => {
 })
 
 test('correct status should be set', () => {
-    const action = SetAppStatusAC("loading")
+    const action = SetAppStatusAC({status: "loading"})
     const endState = appReducer(startState, action)
 
     expect(endState.status).toBe("loading")
 })
 
 test('correct error message should be set', () => {
-    const action = SetAppErrorMessageAC("error")
+    const action = SetAppErrorMessageAC({errorMessage: 'error'})
     const endState = appReducer(startState, action)
 
     expect(endState.errorMessage).toBe("error")
