@@ -36,7 +36,7 @@ function App({demo = false, ...props}: PropsType) {
         </div>
         : <div className="App">
             <AppBar position="static">
-                <Toolbar style={{'justifyContent':'space-between'}}>
+                <Toolbar style={{'justifyContent': 'space-between'}}>
                     <IconButton edge="start" color="inherit" aria-label="menu">
                         <Menu/>
                     </IconButton>
