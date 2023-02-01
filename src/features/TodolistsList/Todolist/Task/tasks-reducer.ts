@@ -2,7 +2,7 @@ import {
     TaskPriorities,
     TaskStatuses,
     TaskType,
-    todolistAPI, TodolistType,
+    todolistAPI,
     updateTaskModelType
 } from "../../../../api/todolists-api";
 import {AppRootStateType} from "../../../../app/store";
@@ -22,7 +22,7 @@ const slice = createSlice({
             state[action.payload.todolistId] = state[action.payload.todolistId].filter(t => t.id !== action.payload.taskId)
         },
         addTaskAC(state, action: PayloadAction<{ todolistId: string, task: TaskType }>) {
-            state[action.payload.todolistId] = [action.payload.task, ...state[action.payload.todolistId]]
+            state[action.payload.todolistId].unshift(action.payload.task)
         },
         updateTaskAC(state, action: PayloadAction<{ taskId: string, apiModel: updateTaskModelType, todolistId: string }>) {
             state[action.payload.todolistId] = state[action.payload.todolistId]
@@ -38,18 +38,18 @@ const slice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(addTodolistAC, (state, action: PayloadAction<{ todolist: TodolistType }>) => {
+            .addCase(addTodolistAC, (state, action) => {
                 state[action.payload.todolist.id] = []
             })
-            .addCase(removeTodolistAC, (state, action: PayloadAction<{ todolistId: string }>) => {
-                delete state[action.payload.todolistId];
+            .addCase(removeTodolistAC, (state, action) => {
+                delete state[action.payload.todolistId]
             })
-            .addCase(setTodolistsAC, (state, action: PayloadAction<{ todolists: TodolistType[] }>) => {
+            .addCase(setTodolistsAC, (state, action) => {
                 action.payload.todolists.forEach(tl => {
                     state[tl.id] = []
                 })
             })
-            .addCase(ClearDataAC, (state, action: PayloadAction) => {
+            .addCase(ClearDataAC, (state, action) => {
                 return {}
             })
     }
