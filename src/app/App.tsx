@@ -17,46 +17,46 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import {initializeAppTC, logoutTC} from "../features/Login/auth-reducer";
 
 type PropsType = {
-    demo?: boolean
+  demo?: boolean
 }
 
 function App({demo = false, ...props}: PropsType) {
-    const dispatch = useAppDispatch()
-    const isInitialized = useAppSelector(state => state.app.isInitialized)
-    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
-    const status = useAppSelector(state => state.app.status)
-    useEffect(() => {
-        dispatch(initializeAppTC())
-    }, [])
-    const onLogoutClickHandler = () => dispatch(logoutTC())
+  const dispatch = useAppDispatch()
+  const isInitialized = useAppSelector(state => state.app.isInitialized)
+  const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
+  const status = useAppSelector(state => state.app.status)
+  useEffect(() => {
+    if (!demo) dispatch(initializeAppTC())
+  }, [])
+  const onLogoutClickHandler = () => dispatch(logoutTC())
 
-    return (!isInitialized)
-        ? <div style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
-            <CircularProgress/>
-        </div>
-        : <div className="App">
-            <AppBar position="static">
-                <Toolbar style={{'justifyContent': 'space-between'}}>
-                    <IconButton edge="start" color="inherit" aria-label="menu">
-                        <Menu/>
-                    </IconButton>
-                    <Typography variant="h6">
-                        Todolists
-                    </Typography>
-                    {isLoggedIn && <Button color="inherit" onClick={onLogoutClickHandler}>Logout</Button>}
-                </Toolbar>
-                {status === "loading" && <LinearProgress/>}
-            </AppBar>
-            <Container fixed>
-                <Routes>
-                    <Route path={'/'} element={<TodolistsList demo={demo}/>}/>
-                    <Route path={'/login'} element={<Login/>}/>
-                    <Route path={'/404'} element={<h1 style={{'textAlign': 'center'}}>404: Page not found</h1>}/>
-                    <Route path={'*'} element={<Navigate to='/404'/>}/>
-                </Routes>
-                <ErrorSnackbar/>
-            </Container>
-        </div>
+  return (!isInitialized)
+    ? <div style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+      <CircularProgress/>
+    </div>
+    : <div className="App">
+      <AppBar position="static">
+        <Toolbar style={{'justifyContent': 'space-between'}}>
+          <IconButton edge="start" color="inherit" aria-label="menu">
+            <Menu/>
+          </IconButton>
+          <Typography variant="h6">
+            Todolists
+          </Typography>
+          {isLoggedIn && <Button color="inherit" onClick={onLogoutClickHandler}>Logout</Button>}
+        </Toolbar>
+        {status === "loading" && <LinearProgress/>}
+      </AppBar>
+      <Container fixed>
+        <Routes>
+          <Route path={'/'} element={<TodolistsList demo={demo}/>}/>
+          <Route path={'/login'} element={<Login/>}/>
+          <Route path={'/404'} element={<h1 style={{'textAlign': 'center'}}>404: Page not found</h1>}/>
+          <Route path={'*'} element={<Navigate to='/404'/>}/>
+        </Routes>
+        <ErrorSnackbar/>
+      </Container>
+    </div>
 }
 
 export default App;
