@@ -26,6 +26,7 @@ export const store = configureStore({
 
 //хуки
 export type AppThunkDispatchType = ThunkDispatch<AppRootStateType, unknown, AnyAction>
+// export type AppDispatchType = typeof store.dispatch
 
 export const useAppDispatch = () => useDispatch<AppThunkDispatchType>()
 export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector

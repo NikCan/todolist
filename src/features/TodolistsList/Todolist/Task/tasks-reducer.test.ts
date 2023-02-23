@@ -1,9 +1,11 @@
 import {
   addTaskAC,
   changeTaskEntityStatusAC,
-  removeTaskAC,
+  fetchTasksTC,
+  removeTaskTC,
   tasksReducer,
-  TasksStateType, updateTaskAC,
+  TasksStateType,
+  updateTaskAC,
 } from './tasks-reducer';
 import {addTodolistAC, removeTodolistAC} from '../../todolists-reducer';
 import {TaskPriorities, TaskStatuses, TaskType} from "../../../../api/todolists-api";
@@ -18,7 +20,7 @@ beforeEach(() => {
         status: TaskStatuses.New,
         order: 2,
         addedDate: '',
-        description: 'kjhhgf',
+        description: 'qwerty',
         priority: TaskPriorities.Low,
         deadline: '',
         startDate: '',
@@ -31,7 +33,7 @@ beforeEach(() => {
         status: TaskStatuses.Completed,
         order: 2,
         addedDate: '',
-        description: 'kjhhgf',
+        description: 'qwerty',
         priority: TaskPriorities.Low,
         deadline: '',
         startDate: '',
@@ -44,7 +46,7 @@ beforeEach(() => {
         status: TaskStatuses.New,
         order: 2,
         addedDate: '',
-        description: 'kjhhgf',
+        description: 'qwerty',
         priority: TaskPriorities.Low,
         deadline: '',
         startDate: '',
@@ -59,7 +61,7 @@ beforeEach(() => {
         status: TaskStatuses.New,
         order: 2,
         addedDate: '',
-        description: 'kjhhgf',
+        description: 'qwerty',
         priority: TaskPriorities.Low,
         deadline: '',
         startDate: '',
@@ -72,7 +74,7 @@ beforeEach(() => {
         status: TaskStatuses.Completed,
         order: 2,
         addedDate: '',
-        description: 'kjhhgf',
+        description: 'qwerty',
         priority: TaskPriorities.Low,
         deadline: '',
         startDate: '',
@@ -85,7 +87,7 @@ beforeEach(() => {
         status: TaskStatuses.New,
         order: 2,
         addedDate: '',
-        description: 'kjhhgf',
+        description: 'qwerty',
         priority: TaskPriorities.Low,
         deadline: '',
         startDate: '',
@@ -97,7 +99,10 @@ beforeEach(() => {
 });
 
 test('correct task should be deleted from correct array', () => {
-  const action = removeTaskAC({taskId: "2", todolistId: "todolistId2"});
+  const action = removeTaskTC.fulfilled({taskId: "2", todolistId: "todolistId2"}, 'requestId', {
+    taskId: "2",
+    todolistId: "todolistId2"
+  });
 
   const endState = tasksReducer(startState, action)
 
@@ -107,7 +112,7 @@ test('correct task should be deleted from correct array', () => {
 });
 test('correct task should be added to correct array', () => {
   const newTask: TaskType = {
-    title: "juce",
+    title: "juice",
     status: TaskStatuses.New,
     order: 0,
     description: "",
@@ -126,13 +131,13 @@ test('correct task should be added to correct array', () => {
   expect(endState["todolistId1"].length).toBe(3);
   expect(endState["todolistId2"].length).toBe(4);
   expect(endState["todolistId2"][0].id).toBeDefined();
-  expect(endState["todolistId2"][0].title).toBe("juce");
+  expect(endState["todolistId2"][0].title).toBe("juice");
   expect(endState["todolistId2"][0].status).toBe(0);
 });
 test('status of specified task should be changed', () => {
   const action = updateTaskAC({
     taskId: "2", apiModel: {
-      title: "juce",
+      title: "juice",
       status: TaskStatuses.New,
       description: "",
       priority: 0,
@@ -191,7 +196,7 @@ test('new array should be added when new todolist is added', () => {
   expect(endState[newKey]).toEqual([]);
 })
 
-test('propertry with todolistId should be deleted', () => {
+test('property with todolistId should be deleted', () => {
   const action = removeTodolistAC({todolistId: "todolistId2"});
 
   const endState = tasksReducer(startState, action)
@@ -200,6 +205,21 @@ test('propertry with todolistId should be deleted', () => {
 
   expect(keys.length).toBe(1);
   expect(endState["todolistId2"]).not.toBeDefined();
+})
+
+test('tasks should be added for todolist', () => {
+  const action = fetchTasksTC.fulfilled({
+    tasks: startState['todolistId1'],
+    todolistId: "todolistId1"
+  }, 'requestId', 'todolistId1');
+
+  const endState = tasksReducer({
+    'todolistId1': [],
+    'todolistId2': []
+  }, action)
+
+  expect(endState["todolistId1"].length).toBe(3);
+  expect(endState["todolistId2"].length).toBe(0);
 })
 
 test('entityStatus of specified task should be changed', () => {

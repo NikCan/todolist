@@ -1,7 +1,7 @@
 import {todolistAPI, TodolistType} from "../../api/todolists-api";
 import {RequestStatusType, SetAppStatusAC} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
-import {FetchTasksTC} from "./Todolist/Task/tasks-reducer";
+import {fetchTasksTC} from "./Todolist/Task/tasks-reducer";
 import {Dispatch} from "redux";
 import {ThunkDispatch} from "redux-thunk";
 import {AppRootStateType} from "../../app/store";
@@ -56,7 +56,7 @@ export const FetchTodolistsTC = () => (dispatch: ThunkDispatch<AppRootStateType,
       return data
     })
     .then((todolists) => {
-      todolists.forEach((tl) => dispatch(FetchTasksTC(tl.id)))
+      todolists.forEach((tl) => dispatch(fetchTasksTC(tl.id)))
     })
 }
 
