@@ -9,12 +9,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {Menu} from "@mui/icons-material";
 import LinearProgress from '@mui/material/LinearProgress';
-import {TodolistsList} from "../features/TodolistsList/Todolists";
+import {TodolistsList} from "features/TodolistsList/Todolists";
 import {useAppDispatch, useAppSelector} from "./store";
-import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
-import {Login} from "../features/Login/Login";
+import {ErrorSnackbar} from "components/ErrorSnackbar/ErrorSnackbar";
+import {Login} from "features/Login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
-import {initializeAppTC, logoutTC} from "../features/Login/auth-reducer";
+import {logoutTC} from "features/Login/auth-reducer";
+import {initializeAppTC} from "./app-reducer";
 
 type PropsType = {
   demo?: boolean
