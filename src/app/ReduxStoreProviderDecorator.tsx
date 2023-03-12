@@ -3,12 +3,12 @@ import {Provider} from "react-redux";
 import React from "react";
 import {combineReducers} from "redux";
 import {tasksReducer} from "../features/TodolistsList/Todolist/Task/tasks-reducer";
-import {todolistsReducer} from "../features/TodolistsList/todolists-reducer";
+import {todolistsReducer} from "../features/TodolistsList/todolists-list-reducer";
 import {v1} from "uuid";
-import {TaskPriorities, TaskStatuses} from "../api/todolists-api";
+import {TaskPriorities, TaskStatuses} from "api";
 import {appReducer} from "./app-reducer";
 import thunk from "redux-thunk";
-import {authReducer} from "../features/Login/auth-reducer";
+import {authReducer} from "../features/Auth/auth-reducer";
 import {configureStore} from "@reduxjs/toolkit";
 
 const rootReducer = combineReducers({

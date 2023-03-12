@@ -1,9 +1,9 @@
-import {authAPI, FieldErrorType, loginType} from "api/todolists-api";
-import {SetAppStatusAC} from "app/app-reducer";
-import {handleServerAppError, handleServerNetworkError} from "utils/error-utils";
-import {ClearDataAC} from "../TodolistsList/todolists-reducer";
+import {authAPI, FieldErrorType, loginType} from "api";
+import {initializeAppTC, SetAppStatusAC} from "app/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "utils";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
+import {ClearDataAC} from "../TodolistsList/todolists-list-reducer";
 
 export const loginTC = createAsyncThunk<undefined, loginType, { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }>(
   'auth/login',
@@ -55,6 +55,12 @@ const slice = createSlice({
       state.isLoggedIn = true
     })
     .addCase(logoutTC.fulfilled, (state) => {
+      state.isLoggedIn = false
+    })
+    .addCase(initializeAppTC.fulfilled, (state) => {
+      state.isLoggedIn = true
+    })
+    .addCase(initializeAppTC.rejected, (state) => {
       state.isLoggedIn = false
     })
 })

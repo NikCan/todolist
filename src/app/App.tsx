@@ -7,15 +7,17 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import {Menu} from "@mui/icons-material";
+import Menu from "@mui/icons-material/Menu";
 import LinearProgress from '@mui/material/LinearProgress';
-import {TodolistsList} from "features/TodolistsList/Todolists";
-import {useAppDispatch, useAppSelector} from "./store";
-import {ErrorSnackbar} from "components/ErrorSnackbar/ErrorSnackbar";
-import {Login} from "features/Login/Login";
+import {useAppDispatch, useAppSelector} from "hooks";
+import {TodolistsList} from "features/TodolistsList";
+import {ErrorSnackbar} from "components";
+import {Login} from "features/Auth";
 import {Navigate, Route, Routes} from "react-router-dom";
-import {logoutTC} from "features/Login/auth-reducer";
-import {initializeAppTC} from "./app-reducer";
+import {initializeAppTC} from "app/app-reducer";
+import {selectIsInitialized, selectStatus} from "app";
+import {selectIsLoggedIn} from "features/Auth";
+import {logoutTC} from "features/Auth/auth-reducer";
 
 type PropsType = {
   demo?: boolean
@@ -23,10 +25,11 @@ type PropsType = {
 
 function App({demo = false, ...props}: PropsType) {
   const dispatch = useAppDispatch()
-  const isInitialized = useAppSelector(state => state.app.isInitialized)
-  const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
-  const status = useAppSelector(state => state.app.status)
-  useEffect(() => {
+  const isInitialized = useAppSelector(selectIsInitialized)
+  const isLoggedIn = useAppSelector(selectIsLoggedIn)
+  const status = useAppSelector(selectStatus)
+
+    useEffect(() => {
     if (!demo) dispatch(initializeAppTC())
   }, [])
   const onLogoutClickHandler = () => dispatch(logoutTC())

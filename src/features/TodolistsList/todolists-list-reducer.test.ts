@@ -5,7 +5,7 @@ import {
   FilterValuesType, removeTodolistTC,
   TodolistDomainType,
   todolistsReducer
-} from './todolists-reducer';
+} from './todolists-list-reducer';
 import {v1} from 'uuid';
 import {TodolistType} from "api/todolists-api";
 

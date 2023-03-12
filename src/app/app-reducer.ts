@@ -1,16 +1,13 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {authAPI} from "api/todolists-api";
 import {handleServerAppError, handleServerNetworkError} from "utils/error-utils";
-import {loginTC} from "features/Login/auth-reducer";
 
 export const initializeAppTC = createAsyncThunk(
   'app/initializeApp',
   async (param, {dispatch, rejectWithValue}) => {
     try {
       const data = await authAPI.me()
-      if (data.resultCode === 0) {
-        dispatch(loginTC.fulfilled);
-      } else {
+      if (data.resultCode !== 0) {
         handleServerAppError(data, dispatch)
         return rejectWithValue('error')
       }
@@ -34,12 +31,12 @@ const slice = createSlice({
     SetAppErrorMessageAC(state, action: PayloadAction<{ errorMessage: string | null }>) {
       state.errorMessage = action.payload.errorMessage
     },
-    setIsInitializedAC(state, action: PayloadAction<{ isInitialized: boolean }>) {
-      state.isInitialized = action.payload.isInitialized
-    }
   },
   extraReducers: builder => builder
     .addCase(initializeAppTC.fulfilled, (state) => {
+      state.isInitialized = true
+    })
+    .addCase(initializeAppTC.rejected, (state) => {
       state.isInitialized = true
     })
 })
