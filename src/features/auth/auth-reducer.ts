@@ -3,7 +3,7 @@ import {initializeAppTC, SetAppStatusAC} from "app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "utils";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
-import {ClearDataAC} from "../TodolistsList/todolists-list-reducer";
+import {ClearDataAC} from "../todolists-list/todolists-list-reducer";
 
 export const loginTC = createAsyncThunk<undefined, loginType, { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }>(
   'auth/login',

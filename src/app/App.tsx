@@ -10,14 +10,14 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/icons-material/Menu";
 import LinearProgress from '@mui/material/LinearProgress';
 import {useAppDispatch, useAppSelector} from "hooks";
-import {TodolistsList} from "features/TodolistsList";
+import {TodolistsList} from "features/todolists-list";
 import {ErrorSnackbar} from "components";
-import {Login} from "features/Auth";
+import {Login} from "features/auth";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {initializeAppTC} from "app/app-reducer";
 import {selectIsInitialized, selectStatus} from "app";
-import {selectIsLoggedIn} from "features/Auth";
-import {logoutTC} from "features/Auth/auth-reducer";
+import {selectIsLoggedIn} from "features/auth";
+import {logoutTC} from "features/auth/auth-reducer";
 
 type PropsType = {
   demo?: boolean

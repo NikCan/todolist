@@ -5,7 +5,7 @@ import {Todolist} from "./Todolist";
 import {TaskPriorities, TaskStatuses} from "../../../api/todolists-api";
 
 export default {
-    title: 'Example/TodolistsList',
+    title: 'Example/todolists-list',
     component: Todolist,
     args: {
         id: "id",

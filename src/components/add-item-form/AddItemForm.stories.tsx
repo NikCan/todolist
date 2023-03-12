@@ -4,7 +4,7 @@ import {AddItemForm} from "./AddItemForm";
 import {action} from "@storybook/addon-actions";
 
 export default {
-  title: 'Example/AddItemForm',
+  title: 'Example/add-item-form',
   component: AddItemForm,
   argTypes: {
     addItem: { description: 'button click' },

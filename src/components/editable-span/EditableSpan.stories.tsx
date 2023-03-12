@@ -4,7 +4,7 @@ import {action} from "@storybook/addon-actions";
 import {EditableSpan} from "./EditableSpan";
 
 export default {
-    title: 'Example/EditableSpan',
+    title: 'Example/editable-span',
     component: EditableSpan,
     args: {
         value: "example",

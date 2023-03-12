@@ -14,9 +14,9 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {AddItemForm} from "components";
 import {Navigate} from "react-router-dom";
-import {selectTodolists} from "features/TodolistsList";
-import {selectIsLoggedIn} from "features/Auth";
-import {selectTasks, Todolist} from "features/TodolistsList/Todolist";
+import {selectTodolists} from "features/todolists-list";
+import {selectIsLoggedIn} from "features/auth";
+import {selectTasks, Todolist} from "features/todolists-list/Todolist";
 import {addTaskTC, removeTaskTC, updateTaskTC} from "./Todolist/Task/tasks-reducer";
 
 type PropsType = {

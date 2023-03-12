@@ -20,7 +20,6 @@ export const Task = React.memo(({
                                   task,
                                   todolistId,
                                   disabled = false,
-                                  ...props
                                 }: TaskPropsType) => {
 
   const onClickHandler = () => removeTask(task.id, todolistId)
