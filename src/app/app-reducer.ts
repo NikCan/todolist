@@ -5,8 +5,11 @@ import {addTodolistTC, changeTodolistTitleTC, fetchTodolistsTC, removeTodolistTC
 import {loginTC, logoutTC} from "features/auth";
 import {addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC} from "features/todolists-list/Todolist/Task";
 import {RequestStatusType} from "./types";
+import {FieldErrorType} from "../api/types";
 
-export const initializeApp = createAsyncThunk(
+export const initializeApp = createAsyncThunk<undefined, undefined,
+  { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }
+>(
   'app/initializeApp',
   async (param, {dispatch, rejectWithValue}) => {
     try {

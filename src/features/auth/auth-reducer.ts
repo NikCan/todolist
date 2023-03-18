@@ -5,9 +5,7 @@ import {handleServerAppError, handleServerNetworkError} from "utils";
 import {createAsyncThunk, createSlice, isAnyOf} from "@reduxjs/toolkit";
 import {ClearDataAC} from "../todolists-list";
 
-export const loginTC = createAsyncThunk<
-  undefined,
-  loginType,
+export const loginTC = createAsyncThunk<undefined, loginType,
   { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }
 >(
   'auth/login',
@@ -22,7 +20,9 @@ export const loginTC = createAsyncThunk<
     }
   })
 
-export const logoutTC = createAsyncThunk(
+export const logoutTC = createAsyncThunk<undefined, undefined,
+  { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }
+>(
   'auth/logout',
   async (param, thunkAPI) => {
     try {
