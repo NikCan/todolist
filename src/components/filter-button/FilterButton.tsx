@@ -1,4 +1,4 @@
-import {FilterValuesType} from "features/todolists-list/todolists-list-reducer";
+import {FilterValuesType} from "features/todolists-list/types";
 import Button from "@mui/material/Button";
 import React from "react";
 

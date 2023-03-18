@@ -8,8 +8,9 @@ type EditableSpanPropsType = {
 }
 
 export const EditableSpan = React.memo(function ({value, onChange, disabled = false}: EditableSpanPropsType) {
-  let [editMode, setEditMode] = useState(false);
-  let [title, setTitle] = useState(value);
+  let [editMode, setEditMode] = useState(false)
+  let [title, setTitle] = useState(value)
+  let [error, setError] = useState<string | null>(null)
 
   const activateEditMode = () => {
     if (!disabled) {
@@ -17,13 +18,22 @@ export const EditableSpan = React.memo(function ({value, onChange, disabled = fa
       setTitle(value)
     }
   }
-  const activateViewMode = () => {
-    setEditMode(false)
-    onChange(title)
+  const activateViewMode = async () => {
+    try {
+      await onChange(title)
+      setEditMode(false)
+    } catch (e: any) {
+      setError(e.message)
+    }
   }
-  const changeTitle = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.currentTarget.value)
+  const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    if (error !== null) {
+      setError(null)
+    }
+    setTitle(e.currentTarget.value)
+  }
 
   return editMode
-    ? <TextField value={title} onChange={changeTitle} autoFocus onBlur={activateViewMode}/>
+    ? <TextField value={title} helperText={error} onChange={changeTitle} autoFocus onBlur={activateViewMode}/>
     : <span onDoubleClick={activateEditMode}>{value}</span>
 })

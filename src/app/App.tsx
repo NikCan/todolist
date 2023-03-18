@@ -12,11 +12,10 @@ import LinearProgress from '@mui/material/LinearProgress';
 import {useAppDispatch, useAppSelector} from "hooks";
 import {TodolistsList} from "features/todolists-list";
 import {ErrorSnackbar} from "components";
-import {Login} from "features/auth";
+import {Login, selectIsLoggedIn} from "features/auth";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {initializeAppTC} from "app/app-reducer";
 import {selectIsInitialized, selectStatus} from "app";
-import {selectIsLoggedIn} from "features/auth";
 import {logoutTC} from "features/auth/auth-reducer";
 
 type PropsType = {
@@ -51,7 +50,7 @@ function App({demo = false, ...props}: PropsType) {
         </Toolbar>
         {status === "loading" && <LinearProgress/>}
       </AppBar>
-      <Container fixed>
+      <Container fixed style={{ margin: '0' }}>
         <Routes>
           <Route path={'/'} element={<TodolistsList demo={demo}/>}/>
           <Route path={'/login'} element={<Login/>}/>

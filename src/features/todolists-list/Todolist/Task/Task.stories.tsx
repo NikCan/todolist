@@ -1,7 +1,7 @@
 import React from 'react';
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 import {Task} from "./Task";
-import {TaskPriorities, TaskStatuses} from "api";
+import {TaskPriorities, TaskStatuses} from "api/types";
 import {ReduxStoreProviderDecorator} from "app/ReduxStoreProviderDecorator";
 
 export default {

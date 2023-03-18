@@ -1,12 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import {
-  FieldErrorType,
-  getTasksType,
-  TaskType,
-  todolistAPI,
-  TodolistType,
-  updateTaskModelType
-} from "./todolists-api";
+import {todolistAPI} from "./todolists-api";
+import {FieldErrorType, getTasksType, TaskType, TodolistType, updateTaskModelType} from "api/types";
 
 export default {
   title: 'API'

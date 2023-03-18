@@ -1,19 +1,21 @@
-import {authAPI, FieldErrorType, loginType} from "api";
-import {initializeAppTC, SetAppStatusAC} from "app/app-reducer";
+import {FieldErrorType, loginType} from "api/types";
+import {authAPI} from "api";
+import {initializeAppTC} from "app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "utils";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
-import {ClearDataAC} from "../todolists-list/todolists-list-reducer";
+import {ClearDataAC} from "../todolists-list";
 
-export const loginTC = createAsyncThunk<undefined, loginType, { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }>(
+export const loginTC = createAsyncThunk<
+  undefined,
+  loginType,
+  { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }
+>(
   'auth/login',
   async (authData, thunkAPI) => {
-    thunkAPI.dispatch(SetAppStatusAC({status: 'loading'}))
     try {
       const data = await authAPI.login(authData)
-      if (data.resultCode === 0) {
-        thunkAPI.dispatch(SetAppStatusAC({status: 'succeeded'}))
-      } else {
+      if (data.resultCode !== 0) {
         handleServerAppError(data, thunkAPI.dispatch)
         return thunkAPI.rejectWithValue({errors: data.messages, fieldsErrors: data.fieldsErrors})
       }
@@ -30,12 +32,10 @@ export const loginTC = createAsyncThunk<undefined, loginType, { rejectValue: { e
 export const logoutTC = createAsyncThunk(
   'auth/logout',
   async (param, thunkAPI) => {
-    thunkAPI.dispatch(SetAppStatusAC({status: 'loading'}))
     try {
       const data = await authAPI.logout()
       if (data.resultCode === 0) {
         thunkAPI.dispatch(ClearDataAC())
-        thunkAPI.dispatch(SetAppStatusAC({status: 'succeeded'}))
       } else {
         handleServerAppError(data, thunkAPI.dispatch)
         return thunkAPI.rejectWithValue('error')

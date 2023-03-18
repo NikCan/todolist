@@ -1,18 +1,23 @@
-import {TaskPriorities, TaskStatuses, TaskType, todolistAPI, updateTaskModelType} from "api";
-import {AppRootStateType} from "app/store";
-import {RequestStatusType, SetAppStatusAC} from "app/app-reducer";
-import {handleServerAppError, handleServerNetworkError} from "utils";
+import {TaskType, updateTaskModelType} from "api/types";
+import {todolistAPI} from "api";
+import {AppRootStateType, ThunkError} from "app/store";
+import {RequestStatusType} from "app/types";
+import {
+  handleServerAppError,
+  handleServerAppErrorNew,
+  handleServerNetworkError,
+  handleServerNetworkErrorNew
+} from "utils";
 import axios from "axios";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {addTodolistTC, ClearDataAC, fetchTodolistsTC, removeTodolistTC} from "../../todolists-list-reducer";
+import {addTodolistTC, ClearDataAC, fetchTodolistsTC, removeTodolistTC} from "features/todolists-list";
+import {TasksStateType, UpdateDomainModelType} from "./types";
 
 export const fetchTasksTC = createAsyncThunk(
   'tasks/fetchTasks',
   async (todolistId: string, thunkAPI) => {
-    thunkAPI.dispatch(SetAppStatusAC({status: "loading"}))
     try {
       const data = await todolistAPI.fetchTasks(todolistId)
-      thunkAPI.dispatch(SetAppStatusAC({status: "succeeded"}))
       return {todolistId, tasks: data.items}
     } catch (e) {
       if (axios.isAxiosError<{ message: string }>(e)) {
@@ -23,31 +28,29 @@ export const fetchTasksTC = createAsyncThunk(
     }
   })
 
-export const addTaskTC = createAsyncThunk(
+export const addTaskTC = createAsyncThunk<{ todolistId: string, task: TaskType }, { title: string, todolistId: string },
+  ThunkError
+>(
   'tasks/addTasks',
-  async (param: { title: string, todolistId: string }, {dispatch, rejectWithValue}) => {
-    dispatch(SetAppStatusAC({status: "loading"}))
+  async (param, {dispatch, rejectWithValue}) => {
     try {
       const data = await todolistAPI.createTask(param.todolistId, param.title)
       if (data.resultCode === 0) {
-        dispatch(SetAppStatusAC({status: "succeeded"}))
         return {todolistId: param.todolistId, task: data.data.item}
       } else {
-        handleServerAppError<{ item: TaskType }>(data, dispatch)
-        return rejectWithValue('error')
+        return handleServerAppErrorNew<{ item: TaskType }>(data, dispatch, rejectWithValue, false)
       }
     } catch (e) {
-      if (axios.isAxiosError<{ message: string }>(e)) {
-        const error = e.response?.data ? e.response?.data : e
-        handleServerNetworkError(error, dispatch)
-        return rejectWithValue(error)
-      }
+      return handleServerNetworkErrorNew(e, dispatch, rejectWithValue, false)
     }
   })
 
-export const updateTaskTC = createAsyncThunk(
+export const updateTaskTC = createAsyncThunk<{ taskId: string, apiModel: updateTaskModelType, todolistId: string },
+  { taskId: string, domainModel: UpdateDomainModelType, todolistId: string },
+  ThunkError
+>(
   'tasks/updateTasks',
-  async (param: { taskId: string, domainModel: UpdateDomainModelType, todolistId: string }, {
+  async (param, {
     dispatch, rejectWithValue, getState
   }) => {
     const state = getState() as AppRootStateType
@@ -62,12 +65,10 @@ export const updateTaskTC = createAsyncThunk(
         description: task.description,
         ...param.domainModel
       }
-      dispatch(SetAppStatusAC({status: "loading"}))
       dispatch(changeTaskEntityStatusAC({taskId: param.taskId, todolistId: param.todolistId, entityStatus: 'loading'}))
       const data = await todolistAPI.updateTask(param.todolistId, param.taskId, apiModel)
       try {
         if (data.resultCode === 0) {
-          dispatch(SetAppStatusAC({status: "succeeded"}))
           dispatch(changeTaskEntityStatusAC({
             taskId: param.taskId,
             todolistId: param.todolistId,
@@ -75,29 +76,22 @@ export const updateTaskTC = createAsyncThunk(
           }))
           return {taskId: param.taskId, apiModel, todolistId: param.todolistId}
         } else {
-          handleServerAppError<{ item: TaskType }>(data, dispatch)
-          return rejectWithValue('error')
+          return handleServerAppErrorNew<{ item: TaskType }>(data, dispatch, rejectWithValue, false)
         }
       } catch (e) {
-        if (axios.isAxiosError<{ message: string }>(e)) {
-          const error = e.response?.data ? e.response?.data : e
-          handleServerNetworkError(error, dispatch)
-          return rejectWithValue(e)
-        }
+        handleServerNetworkErrorNew(e, dispatch, rejectWithValue, false)
       }
     }
-    return rejectWithValue('error')
+    return rejectWithValue({errors: ['unknown error'], fieldsErrors: undefined})
   }
 )
 export const removeTaskTC = createAsyncThunk(
   'tasks/removeTask',
   async (param: { taskId: string, todolistId: string }, thunkAPI) => {
-    thunkAPI.dispatch(SetAppStatusAC({status: "loading"}))
     thunkAPI.dispatch(changeTaskEntityStatusAC({...param, entityStatus: 'loading'}))
     try {
       const data = await todolistAPI.deleteTask(param.todolistId, param.taskId)
       if (data.resultCode === 0) {
-        thunkAPI.dispatch(SetAppStatusAC({status: "succeeded"}))
         thunkAPI.dispatch(changeTaskEntityStatusAC({...param, entityStatus: 'succeeded'}))
         return {...param}
       } else {
@@ -151,16 +145,3 @@ const slice = createSlice({
 })
 export const tasksReducer = slice.reducer
 export const {changeTaskEntityStatusAC} = slice.actions
-
-// types
-type UpdateDomainModelType = {
-  title?: string
-  description?: string
-  status?: TaskStatuses
-  priority?: TaskPriorities
-  startDate?: string
-  deadline?: string
-}
-export type TasksStateType = {
-  [key: string]: Array<TaskType>
-}
