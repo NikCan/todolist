@@ -1,14 +1,13 @@
 import {todolistAPI} from "api";
 import {TodolistType} from "api/types";
 import {RequestStatusType} from "app/types";
-import {handleServerAppErrorNew, handleServerNetworkError, handleServerNetworkErrorNew} from "utils";
+import {handleServerAppError, handleServerNetworkError} from "utils";
 import {fetchTasksTC} from "./Todolist/Task";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import axios from "axios";
 import {ThunkError} from "app/store";
 import {FilterValuesType, TodolistDomainType} from "./types";
 
-export const fetchTodolistsTC = createAsyncThunk(
+export const fetchTodolistsTC = createAsyncThunk<{todolists: TodolistType[]}, undefined, ThunkError>(
   'todolists/fetchTodolists',
   async (param, {dispatch, rejectWithValue}) => {
     const todolists = await todolistAPI.getTodolists()
@@ -16,28 +15,20 @@ export const fetchTodolistsTC = createAsyncThunk(
       todolists.forEach((tl) => dispatch(fetchTasksTC(tl.id)))
       return {todolists}
     } catch (e) {
-      if (axios.isAxiosError<{ message: string }>(e)) {
-        const error = e.response?.data ? e.response?.data : e
-        handleServerNetworkError(error, dispatch)
-      }
-      return rejectWithValue(e)
+      return handleServerNetworkError(e, dispatch, rejectWithValue)
     }
   })
 
-export const removeTodolistTC = createAsyncThunk(
+export const removeTodolistTC = createAsyncThunk<{todolistId: string}, string, ThunkError>(
   'todolists/removeTodolists',
-  async (id: string, {dispatch, rejectWithValue}) => {
+  async (id, {dispatch, rejectWithValue}) => {
     dispatch(changeTodolistEntityStatusAC({id, status: 'loading'}))
     try {
       await todolistAPI.deleteTodolist(id)
       dispatch(changeTodolistEntityStatusAC({id, status: 'succeeded'}))
       return {todolistId: id}
     } catch (e) {
-      if (axios.isAxiosError<{ message: string }>(e)) {
-        const error = e.response?.data ? e.response?.data : e
-        handleServerNetworkError(error, dispatch)
-      }
-      return rejectWithValue(e)
+      return handleServerNetworkError(e, dispatch, rejectWithValue)
     }
   })
 
@@ -49,10 +40,10 @@ export const addTodolistTC = createAsyncThunk<{ todolist: TodolistType }, string
       if (data.resultCode === 0) {
         return {todolist: data.data.item}
       } else {
-        return handleServerAppErrorNew<{ item: TodolistType }>(data, dispatch, rejectWithValue, false)
+        return handleServerAppError<{ item: TodolistType }>(data, dispatch, rejectWithValue, false)
       }
     } catch (e: any) {
-      return handleServerNetworkErrorNew(e, dispatch, rejectWithValue, false)
+      return handleServerNetworkError(e, dispatch, rejectWithValue, false)
     }
   }
 )
@@ -69,10 +60,10 @@ export const changeTodolistTitleTC = createAsyncThunk<{ id: string, title: strin
         dispatch(changeTodolistEntityStatusAC({id: params.id, status: 'succeeded'}))
         return {id: params.id, title: params.title}
       } else {
-        return handleServerAppErrorNew(data, dispatch, rejectWithValue, false)
+        return handleServerAppError(data, dispatch, rejectWithValue, false)
       }
     } catch (e: any) {
-      return handleServerNetworkErrorNew(e, dispatch, rejectWithValue, false)
+      return handleServerNetworkError(e, dispatch, rejectWithValue, false)
     }
   }
 )

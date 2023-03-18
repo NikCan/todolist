@@ -6,18 +6,16 @@ import {loginTC, logoutTC} from "features/auth";
 import {addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC} from "features/todolists-list/Todolist/Task";
 import {RequestStatusType} from "./types";
 
-export const initializeAppTC = createAsyncThunk(
+export const initializeApp = createAsyncThunk(
   'app/initializeApp',
   async (param, {dispatch, rejectWithValue}) => {
     try {
       const data = await authAPI.me()
       if (data.resultCode !== 0) {
-        handleServerAppError(data, dispatch)
-        return rejectWithValue('error')
+        return handleServerAppError(data, dispatch, rejectWithValue)
       }
     } catch (e: any) {
-      handleServerNetworkError(e, dispatch)
-      return rejectWithValue(e)
+      handleServerNetworkError(e, dispatch, rejectWithValue)
     }
   })
 
@@ -37,10 +35,10 @@ const slice = createSlice({
     },
   },
   extraReducers: builder => builder
-    .addCase(initializeAppTC.fulfilled, (state) => {
+    .addCase(initializeApp.fulfilled, (state) => {
       state.isInitialized = true
     })
-    .addCase(initializeAppTC.rejected, (state) => {
+    .addCase(initializeApp.rejected, (state) => {
       state.isInitialized = true
     })
     .addMatcher(isAnyOf(changeTodolistTitleTC.pending, addTodolistTC.pending, removeTodolistTC.pending,

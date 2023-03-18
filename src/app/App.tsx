@@ -14,7 +14,7 @@ import {TodolistsList} from "features/todolists-list";
 import {ErrorSnackbar} from "components";
 import {Login, selectIsLoggedIn} from "features/auth";
 import {Navigate, Route, Routes} from "react-router-dom";
-import {initializeAppTC} from "app/app-reducer";
+import {initializeApp} from "app/app-reducer";
 import {selectIsInitialized, selectStatus} from "app";
 import {logoutTC} from "features/auth/auth-reducer";
 
@@ -29,7 +29,7 @@ function App({demo = false, ...props}: PropsType) {
   const status = useAppSelector(selectStatus)
 
     useEffect(() => {
-    if (!demo) dispatch(initializeAppTC())
+    if (!demo) dispatch(initializeApp())
   }, [])
   const onLogoutClickHandler = () => dispatch(logoutTC())
 

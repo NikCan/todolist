@@ -1,9 +1,8 @@
 import {FieldErrorType, loginType} from "api/types";
 import {authAPI} from "api";
-import {initializeAppTC} from "app/app-reducer";
+import {initializeApp} from "app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "utils";
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import axios from "axios";
+import {createAsyncThunk, createSlice, isAnyOf} from "@reduxjs/toolkit";
 import {ClearDataAC} from "../todolists-list";
 
 export const loginTC = createAsyncThunk<
@@ -16,16 +15,10 @@ export const loginTC = createAsyncThunk<
     try {
       const data = await authAPI.login(authData)
       if (data.resultCode !== 0) {
-        handleServerAppError(data, thunkAPI.dispatch)
-        return thunkAPI.rejectWithValue({errors: data.messages, fieldsErrors: data.fieldsErrors})
+        return handleServerAppError(data, thunkAPI.dispatch, thunkAPI.rejectWithValue)
       }
     } catch (e) {
-      if (axios.isAxiosError<{ message: string }>(e)) {
-        const error = e.response?.data ? e.response?.data : e
-        handleServerNetworkError(error, thunkAPI.dispatch)
-        return thunkAPI.rejectWithValue({errors: [error.message], fieldsErrors: undefined})
-      }
-      return thunkAPI.rejectWithValue({errors: ['unknown error'], fieldsErrors: undefined})
+      return handleServerNetworkError(e, thunkAPI.dispatch, thunkAPI.rejectWithValue)
     }
   })
 
@@ -37,12 +30,10 @@ export const logoutTC = createAsyncThunk(
       if (data.resultCode === 0) {
         thunkAPI.dispatch(ClearDataAC())
       } else {
-        handleServerAppError(data, thunkAPI.dispatch)
-        return thunkAPI.rejectWithValue('error')
+        return handleServerAppError(data, thunkAPI.dispatch, thunkAPI.rejectWithValue)
       }
     } catch (e: any) {
-      handleServerNetworkError(e, thunkAPI.dispatch)
-      return thunkAPI.rejectWithValue(e)
+      return handleServerNetworkError(e, thunkAPI.dispatch, thunkAPI.rejectWithValue)
     }
   })
 
@@ -51,16 +42,10 @@ const slice = createSlice({
   initialState: {isLoggedIn: false},
   reducers: {},
   extraReducers: builder => builder
-    .addCase(loginTC.fulfilled, (state) => {
+    .addMatcher(isAnyOf(loginTC.fulfilled, initializeApp.fulfilled), (state) => {
       state.isLoggedIn = true
     })
-    .addCase(logoutTC.fulfilled, (state) => {
-      state.isLoggedIn = false
-    })
-    .addCase(initializeAppTC.fulfilled, (state) => {
-      state.isLoggedIn = true
-    })
-    .addCase(initializeAppTC.rejected, (state) => {
+    .addMatcher(isAnyOf(loginTC.rejected, initializeApp.rejected), (state) => {
       state.isLoggedIn = false
     })
 })
