@@ -3,7 +3,7 @@ import {authAPI} from "api";
 import {initializeApp} from "app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "utils";
 import {createAsyncThunk, createSlice, isAnyOf} from "@reduxjs/toolkit";
-import {ClearDataAC} from "../todolists-list";
+import {todolistsActions} from "../todolists-list";
 
 export const loginTC = createAsyncThunk<undefined, loginType,
   { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }
@@ -28,7 +28,7 @@ export const logoutTC = createAsyncThunk<undefined, undefined,
     try {
       const data = await authAPI.logout()
       if (data.resultCode === 0) {
-        thunkAPI.dispatch(ClearDataAC())
+        thunkAPI.dispatch(todolistsActions.ClearDataAC())
       } else {
         return handleServerAppError(data, thunkAPI.dispatch, thunkAPI.rejectWithValue)
       }
@@ -50,4 +50,4 @@ const slice = createSlice({
     })
 })
 
-export const authReducer = slice.reducer
+export const {reducer: authReducer} = slice

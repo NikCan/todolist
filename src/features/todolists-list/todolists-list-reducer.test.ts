@@ -1,9 +1,9 @@
 import {
   addTodolistTC,
-  changeTodolistEntityStatusAC,
-  changeTodolistFilterAC, changeTodolistTitleTC,
+  changeTodolistTitleTC,
   removeTodolistTC,
-  todolistsReducer
+  todolistsReducer,
+  todolistsActions
 } from './todolists-list-reducer';
 import {v1} from 'uuid';
 import {FilterValuesType, TodolistDomainType} from "./types";
@@ -56,7 +56,7 @@ test('correct todolist should change its name', () => {
 test('correct filter of todolist should be changed', () => {
   let newFilter: FilterValuesType = "completed";
 
-  const action = changeTodolistFilterAC({id: todolistId2, filter: newFilter});
+  const action = todolistsActions.changeTodolistFilterAC({id: todolistId2, filter: newFilter});
 
   const endState = todolistsReducer(startState, action);
 
@@ -65,7 +65,7 @@ test('correct filter of todolist should be changed', () => {
 });
 
 test('correct entity status of todolist should be changed', () => {
-  const action = changeTodolistEntityStatusAC({id: todolistId2, status: 'loading'});
+  const action = todolistsActions.changeTodolistEntityStatusAC({id: todolistId2, status: 'loading'});
 
   const endState = todolistsReducer(startState, action);
 

@@ -4,11 +4,7 @@ import Delete from "@mui/icons-material/Delete";
 import {AddItemForm, EditableSpan, FilterButton} from 'components'
 import {addTaskTC, Task} from 'features/todolists-list/Todolist/Task'
 import {TaskStatuses} from "api/types";
-import {
-  changeTodolistFilterAC,
-  changeTodolistTitleTC,
-  removeTodolistTC,
-} from "../todolists-list-reducer";
+import {changeTodolistTitleTC, removeTodolistTC, todolistsActions} from "../todolists-list-reducer";
 import {useAppDispatch, useAppSelector} from "hooks";
 import {selectTasks} from "./selectors";
 import {FilterValuesType, TodolistDomainType} from '../types';
@@ -46,7 +42,10 @@ export const Todolist = React.memo(({todolist, demo = false}: PropsType) => {
     }
   }
 
-  const onClickHandler = (filter: FilterValuesType) => dispatch(changeTodolistFilterAC({id: todolist.id, filter}))
+  const onClickHandler = (filter: FilterValuesType) => dispatch(todolistsActions.changeTodolistFilterAC({
+    id: todolist.id,
+    filter
+  }))
 
   let tasksForTodolist = tasks
   if (todolist.filter === 'active') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.New)

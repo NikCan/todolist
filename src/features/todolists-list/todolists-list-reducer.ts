@@ -7,7 +7,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ThunkError} from "app/store";
 import {FilterValuesType, TodolistDomainType} from "./types";
 
-export const fetchTodolistsTC = createAsyncThunk<{todolists: TodolistType[]}, undefined, ThunkError>(
+export const fetchTodolistsTC = createAsyncThunk<{ todolists: TodolistType[] }, undefined, ThunkError>(
   'todolists/fetchTodolists',
   async (param, {dispatch, rejectWithValue}) => {
     const todolists = await todolistAPI.getTodolists()
@@ -19,13 +19,13 @@ export const fetchTodolistsTC = createAsyncThunk<{todolists: TodolistType[]}, un
     }
   })
 
-export const removeTodolistTC = createAsyncThunk<{todolistId: string}, string, ThunkError>(
+export const removeTodolistTC = createAsyncThunk<{ todolistId: string }, string, ThunkError>(
   'todolists/removeTodolists',
   async (id, {dispatch, rejectWithValue}) => {
-    dispatch(changeTodolistEntityStatusAC({id, status: 'loading'}))
+    dispatch(todolistsActions.changeTodolistEntityStatusAC({id, status: 'loading'}))
     try {
       await todolistAPI.deleteTodolist(id)
-      dispatch(changeTodolistEntityStatusAC({id, status: 'succeeded'}))
+      dispatch(todolistsActions.changeTodolistEntityStatusAC({id, status: 'succeeded'}))
       return {todolistId: id}
     } catch (e) {
       return handleServerNetworkError(e, dispatch, rejectWithValue)
@@ -53,11 +53,11 @@ export const changeTodolistTitleTC = createAsyncThunk<{ id: string, title: strin
 >(
   'todolists/changeTodolistTitle',
   async (params, {dispatch, rejectWithValue}) => {
-    dispatch(changeTodolistEntityStatusAC({id: params.id, status: 'loading'}))
+    dispatch(todolistsActions.changeTodolistEntityStatusAC({id: params.id, status: 'loading'}))
     try {
       const data = await todolistAPI.updateTodolist(params.id, params.title)
       if (data.resultCode === 0) {
-        dispatch(changeTodolistEntityStatusAC({id: params.id, status: 'succeeded'}))
+        dispatch(todolistsActions.changeTodolistEntityStatusAC({id: params.id, status: 'succeeded'}))
         return {id: params.id, title: params.title}
       } else {
         return handleServerAppError(data, dispatch, rejectWithValue, false)
@@ -96,5 +96,4 @@ const slice = createSlice({
       return state.map(tl => tl.id === action.payload.id ? {...tl, title: action.payload.title} : tl);
     })
 })
-export const todolistsReducer = slice.reducer
-export const {ClearDataAC, changeTodolistFilterAC, changeTodolistEntityStatusAC} = slice.actions
+export const {reducer: todolistsReducer, actions: todolistsActions} = slice

@@ -1,9 +1,9 @@
 import {
   addTaskTC,
-  changeTaskEntityStatusAC,
   fetchTasksTC,
   removeTaskTC,
   tasksReducer,
+  tasksActions,
   updateTaskTC,
 } from './tasks-reducer';
 import {TaskPriorities, TaskStatuses, TaskType} from "api/types";
@@ -227,7 +227,11 @@ test('tasks should be added for todolist', () => {
 })
 
 test('entityStatus of specified task should be changed', () => {
-  const action = changeTaskEntityStatusAC({taskId: "2", todolistId: "todolistId2", entityStatus: 'loading'});
+  const action = tasksActions.changeTaskEntityStatusAC({
+    taskId: "2",
+    todolistId: "todolistId2",
+    entityStatus: 'loading'
+  });
 
   const endState = tasksReducer(startState, action)
 

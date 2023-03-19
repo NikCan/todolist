@@ -4,7 +4,7 @@ import {AppRootStateType, ThunkError} from "app/store";
 import {RequestStatusType} from "app/types";
 import {handleServerAppError, handleServerNetworkError} from "utils";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {addTodolistTC, ClearDataAC, fetchTodolistsTC, removeTodolistTC} from "features/todolists-list";
+import {addTodolistTC, todolistsActions, fetchTodolistsTC, removeTodolistTC} from "features/todolists-list";
 import {TasksStateType, UpdateDomainModelType} from "./types";
 
 export const fetchTasksTC = createAsyncThunk<{ todolistId: string, tasks: TaskType[] }, string, ThunkError>(
@@ -55,11 +55,15 @@ export const updateTaskTC = createAsyncThunk<{ taskId: string, apiModel: updateT
         description: task.description,
         ...param.domainModel
       }
-      dispatch(changeTaskEntityStatusAC({taskId: param.taskId, todolistId: param.todolistId, entityStatus: 'loading'}))
+      dispatch(tasksActions.changeTaskEntityStatusAC({
+        taskId: param.taskId,
+        todolistId: param.todolistId,
+        entityStatus: 'loading'
+      }))
       const data = await todolistAPI.updateTask(param.todolistId, param.taskId, apiModel)
       try {
         if (data.resultCode === 0) {
-          dispatch(changeTaskEntityStatusAC({
+          dispatch(tasksActions.changeTaskEntityStatusAC({
             taskId: param.taskId,
             todolistId: param.todolistId,
             entityStatus: 'succeeded'
@@ -80,11 +84,11 @@ export const removeTaskTC = createAsyncThunk<{ taskId: string, todolistId: strin
 >(
   'tasks/removeTask',
   async (param, thunkAPI) => {
-    thunkAPI.dispatch(changeTaskEntityStatusAC({...param, entityStatus: 'loading'}))
+    thunkAPI.dispatch(tasksActions.changeTaskEntityStatusAC({...param, entityStatus: 'loading'}))
     try {
       const data = await todolistAPI.deleteTask(param.todolistId, param.taskId)
       if (data.resultCode === 0) {
-        thunkAPI.dispatch(changeTaskEntityStatusAC({...param, entityStatus: 'succeeded'}))
+        thunkAPI.dispatch(tasksActions.changeTaskEntityStatusAC({...param, entityStatus: 'succeeded'}))
         return {...param}
       } else {
         return handleServerAppError(data, thunkAPI.dispatch, thunkAPI.rejectWithValue)
@@ -114,7 +118,7 @@ const slice = createSlice({
       .addCase(fetchTodolistsTC.fulfilled, (state, action) => {
         action.payload.todolists.forEach(tl => state[tl.id] = [])
       })
-      .addCase(ClearDataAC, () => {
+      .addCase(todolistsActions.ClearDataAC, () => {
         return {}
       })
       .addCase(fetchTasksTC.fulfilled, (state, action) => {
@@ -132,5 +136,4 @@ const slice = createSlice({
       })
   }
 })
-export const tasksReducer = slice.reducer
-export const {changeTaskEntityStatusAC} = slice.actions
+export const {reducer: tasksReducer, actions: tasksActions} = slice
