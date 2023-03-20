@@ -51,7 +51,7 @@ export const Todolist = React.memo(({todolist, demo = false}: PropsType) => {
   if (todolist.filter === 'active') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.New)
   if (todolist.filter === 'completed') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.Completed)
 
-  return <div>
+  return <div style={{maxWidth: '300px'}}>
     <h3 style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
       <EditableSpan
         value={todolist.title}

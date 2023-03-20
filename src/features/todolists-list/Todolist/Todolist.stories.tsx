@@ -1,55 +1,16 @@
-import React from 'react';
-import {ComponentMeta, ComponentStory} from '@storybook/react';
-import {action} from "@storybook/addon-actions";
+import {ComponentMeta, ComponentStory} from "@storybook/react";
 import {Todolist} from "./Todolist";
-import {TaskPriorities, TaskStatuses} from "api/types";
+import {ReduxStoreProviderDecorator} from "app/ReduxStoreProviderDecorator";
 
 export default {
-  title: 'Example/todolists-list',
+  title: 'Example/todolist',
   component: Todolist,
+  decorators: [ReduxStoreProviderDecorator],
   args: {
-    id: "id",
-    title: "todolist",
-    tasks: [
-      {
-        id: "tId",
-        title: "Story",
-        status: TaskStatuses.Completed,
-        order: 2,
-        addedDate: '',
-        description: 'kjhhgf',
-        priority: TaskPriorities.Low,
-        deadline: '',
-        startDate: '',
-        todoListId: 'todolistId',
-        entityStatus: 'idle'
-      },
-      {
-        id: "tId1",
-        title: "Story2",
-        status: TaskStatuses.New,
-        order: 2,
-        addedDate: '',
-        description: 'kjhhgf',
-        priority: TaskPriorities.Low,
-        deadline: '',
-        startDate: '',
-        todoListId: 'todolistId',
-        entityStatus: 'idle'
-      }
-    ],
-    changeFilter: action("changeFilter"),
-    addTask: action("addTask"),
-    changeTaskStatus: action("changeTaskStatus"),
-    changeTaskTitle: action("changeTaskTitle"),
-    removeTask: action("removeTask"),
-    removeTodolist: action("removeTodolist"),
-    changeTodolistTitle: action("changeTodolistTitle"),
-    filter: "all",
+    todolist: {id: 'todolistId1', title: 'What to learn', filter: 'all', entityStatus: 'idle', order: 1, addedDate: ''},
   }
 } as ComponentMeta<typeof Todolist>
 
-const Template: ComponentStory<typeof Todolist> = (args) => <Todolist {...args} />;
+const Template: ComponentStory<typeof Todolist> = (args) => <Todolist demo={true} {...args} />;
 
 export const TodolistExample = Template.bind({});
-TodolistExample.args = {};
