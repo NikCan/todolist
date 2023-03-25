@@ -22,15 +22,17 @@ type PropsType = {
   demo?: boolean
 }
 
-function App({demo = false, ...props}: PropsType) {
+function App({demo = false}: PropsType) {
   const dispatch = useAppDispatch()
   const isInitialized = useAppSelector(selectIsInitialized)
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
   const status = useAppSelector(selectStatus)
 
     useEffect(() => {
-    if (!demo) dispatch(initializeApp())
+      //is Initialized for hot reloading
+    if (!demo && !isInitialized) dispatch(initializeApp())
   }, [])
+
   const onLogoutClickHandler = () => dispatch(logoutTC())
 
   return (!isInitialized)

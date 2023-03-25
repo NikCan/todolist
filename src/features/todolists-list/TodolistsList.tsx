@@ -30,7 +30,8 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
   }
 
   useEffect(() => {
-    !demo && isLoggedIn && dispatch(fetchTodolistsTC())
+    //todolist.length for hot reloading
+    !demo && isLoggedIn && !todolists.length && dispatch(fetchTodolistsTC())
   }, [])
 
   return !isLoggedIn ? <Navigate to={'/login'}/> : <>
